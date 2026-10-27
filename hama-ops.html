@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAMA.OPS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#060912;--s1:rgba(20,26,44,.62);--s1o:#121827;--s2:rgba(255,255,255,.035);--s3:rgba(255,255,255,.07);--line:rgba(255,255,255,.065);--line2:rgba(255,255,255,.12);--tx:#eef1f8;--mu:#97a0b8;--fa:#5f6880;--ac:#7c83ff;--ac2:#6366f1;--ac3:#a855f7;--grad:linear-gradient(135deg,#6366f1 0%,#8b5cf6 55%,#c084fc 100%);--ok:#22c58b;--warn:#f5a524;--bad:#f43f5e;--r:18px;--sh:0 1px 0 rgba(255,255,255,.05) inset,0 20px 40px -24px rgba(0,0,0,.8)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:14px/1.55 'Plus Jakarta Sans',Inter,system-ui,sans-serif;font-feature-settings:'tnum';-webkit-font-smoothing:antialiased;display:flex;overflow:hidden;position:relative}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(900px 520px at 12% -8%,rgba(99,102,241,.22),transparent 60%),radial-gradient(760px 520px at 100% 0%,rgba(168,85,247,.13),transparent 60%),radial-gradient(700px 600px at 70% 110%,rgba(16,185,129,.08),transparent 60%)}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 10%,transparent 70%);mask-image:radial-gradient(ellipse at 50% 0%,#000 10%,transparent 70%)}
+body>aside,body>main,body>nav{position:relative;z-index:1}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4,p{margin:0}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:99px;border:3px solid transparent;background-clip:padding-box}::-webkit-scrollbar-track{background:none}
+::selection{background:rgba(124,131,255,.35)}
+
+/* shell */
+.side{width:248px;flex-shrink:0;display:flex;flex-direction:column;padding:22px 14px;gap:3px;background:linear-gradient(180deg,rgba(14,19,34,.85),rgba(8,11,20,.85));border-right:1px solid var(--line);backdrop-filter:blur(20px)}
+.brand{font-weight:800;font-size:16px;letter-spacing:.02em;padding:2px 8px 24px;display:flex;align-items:center;gap:11px}
+.brand i{width:36px;height:36px;border-radius:11px;display:grid;place-content:center;background:var(--grad);color:#fff;font-size:15px;box-shadow:0 8px 24px -6px rgba(124,92,246,.7),inset 0 1px 0 rgba(255,255,255,.3)}
+.brand small{display:block;font-size:10.5px;font-weight:600;color:var(--fa);letter-spacing:.14em}
+.nav-label{font-size:10.5px;font-weight:700;letter-spacing:.14em;color:var(--fa);padding:0 12px 8px}
+.nav{position:relative;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;border:0;background:none;color:var(--mu);cursor:pointer;text-align:left;width:100%;font-weight:600;font-size:13.5px;transition:background .2s,color .2s}
+.nav i{width:18px;text-align:center;font-size:14px;transition:color .2s}
+.nav:hover{background:var(--s2);color:var(--tx)}
+.nav.on{background:linear-gradient(90deg,rgba(99,102,241,.22),rgba(139,92,246,.06));color:#fff;box-shadow:inset 0 0 0 1px rgba(124,131,255,.18)}
+.nav.on i{color:#a5abff}
+.nav.on::before{content:'';position:absolute;left:-14px;top:9px;bottom:9px;width:3px;border-radius:0 4px 4px 0;background:var(--grad);box-shadow:0 0 14px rgba(124,131,255,.9)}
+.side-foot{margin-top:auto;padding:14px;border-radius:14px;background:linear-gradient(160deg,rgba(99,102,241,.16),rgba(168,85,247,.06));border:1px solid rgba(124,131,255,.16);font-size:12px;color:var(--mu);display:flex;flex-direction:column;gap:8px}
+.side-foot button{border:0;background:none;padding:0;color:#a5abff;cursor:pointer;text-align:left;font-size:12px;font-weight:600}
+main{flex:1;min-width:0;display:flex;flex-direction:column;height:100%}
+.top{display:flex;align-items:center;gap:12px;padding:16px 36px;border-bottom:1px solid var(--line);background:rgba(6,9,18,.55);backdrop-filter:blur(18px)}
+.top h1{font-size:22px;font-weight:800;letter-spacing:-.02em;flex:1}
+.daynav{display:flex;align-items:center;gap:2px;background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:4px}
+.daynav span{min-width:110px;text-align:center;font-weight:600;font-size:13px}
+.ib{border:0;background:none;color:var(--mu);width:32px;height:32px;border-radius:9px;cursor:pointer;transition:.15s}
+.ib:hover{background:var(--s3);color:var(--tx)}
+#view{flex:1;overflow-y:auto;padding:30px 36px 80px}
+.wrap{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:20px;animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* layout */
+.grid{display:grid;gap:20px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.auto{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.span2{grid-column:span 2}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.wrapx{flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.col{display:flex;flex-direction:column;gap:12px}
+
+/* components */
+.card{position:relative;background:linear-gradient(180deg,rgba(28,35,58,.62),rgba(16,21,36,.62));border:1px solid var(--line);border-radius:var(--r);padding:22px;min-width:0;box-shadow:var(--sh);backdrop-filter:blur(14px);transition:border-color .2s,transform .2s}
+.card::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(180deg,rgba(255,255,255,.09),transparent 40%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.card[onclick]:hover{border-color:rgba(124,131,255,.3);transform:translateY(-2px)}
+.card h3{font-size:15px;font-weight:700;display:flex;align-items:center;gap:11px;letter-spacing:-.01em}
+.sub{color:var(--mu);font-size:12.5px;margin:6px 0 18px}
+.eyebrow{font-size:11.5px;color:var(--mu);font-weight:600;margin-bottom:8px;letter-spacing:.02em}
+.big{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.15}
+.mid{font-size:21px;font-weight:700;letter-spacing:-.02em}
+.mu{color:var(--mu)} .faint{color:var(--fa)} .ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--warn)}
+.sm{font-size:12px}
+.bar{height:8px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+.bar>div{--c:var(--ac);height:100%;background:linear-gradient(90deg,color-mix(in srgb,var(--c) 45%,transparent),var(--c));border-radius:99px;box-shadow:0 0 12px color-mix(in srgb,var(--c) 60%,transparent);transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.badge{--c:var(--ac);width:38px;height:38px;border-radius:12px;display:grid;place-content:center;flex-shrink:0;font-size:15px;color:var(--c);background:linear-gradient(145deg,color-mix(in srgb,var(--c) 26%,transparent),color-mix(in srgb,var(--c) 8%,transparent));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 30%,transparent),0 8px 20px -10px var(--c)}
+.kpi{overflow:hidden}
+.kpi .badge{position:absolute;top:20px;right:20px}
+.kpi::after{content:'';position:absolute;right:-50px;bottom:-60px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--c) 22%,transparent),transparent 70%);pointer-events:none}
+.kpi .big{margin-top:14px}
+.kpi .eyebrow{padding-right:46px}
+.btn{border:1px solid var(--line2);background:rgba(255,255,255,.04);border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap;transition:.15s}
+.btn:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+.btn.pri{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 8px 22px -8px rgba(124,92,246,.8),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn.pri:hover{filter:brightness(1.1)}
+.btn.sm{padding:5px 10px;font-size:12px;border-radius:8px}
+.btn.ghost{background:none;border-color:transparent;color:var(--mu)}
+.btn.ghost:hover{color:var(--tx);background:var(--s3)}
+.btn.danger{color:var(--bad)}
+.in{background:rgba(5,8,16,.6);border:1px solid var(--line2);border-radius:10px;padding:9px 12px;width:100%;outline:none;transition:border-color .15s,box-shadow .15s}
+.in:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(124,131,255,.18)}
+select.in{cursor:pointer}
+select.in option,select.in optgroup{background:#121827}
+textarea.in{resize:vertical;min-height:84px;line-height:1.55}
+label.f{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--mu);font-weight:600}
+.chk{appearance:none;width:20px;height:20px;border:1.5px solid rgba(255,255,255,.2);border-radius:7px;cursor:pointer;display:grid;place-content:center;flex-shrink:0;margin:0;transition:.15s}
+.chk:hover{border-color:var(--ac)}
+.chk:checked{background:var(--grad);border-color:transparent;box-shadow:0 4px 12px -3px rgba(124,92,246,.8)}
+.chk:checked::after{content:'';width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:translateY(-1px) rotate(-45deg)}
+.item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;transition:background .15s}
+.item:hover{background:var(--s2)}
+.item .act{opacity:0;transition:opacity .15s}
+.item:hover .act{opacity:1}
+.ghostin{background:none;border:0;outline:none;width:100%;padding:2px 0;border-bottom:1px solid transparent}
+.ghostin:focus{border-bottom-color:var(--ac)}
+.done-t{color:var(--fa);text-decoration:line-through}
+.stepper{display:flex;align-items:center;gap:3px}
+.stepper button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line2);background:rgba(255,255,255,.04);cursor:pointer;color:var(--mu);transition:.15s}
+.stepper button:hover{color:#fff;background:var(--ac2);border-color:var(--ac2)}
+.stepper span{min-width:30px;text-align:center;font-weight:700}
+.tag{font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--mu);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:99px;padding:7px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:600;font-size:13px;color:var(--mu);transition:.15s}
+.chip:hover{color:var(--tx);border-color:var(--line2)}
+.chip.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 6px 18px -8px rgba(124,92,246,.9)}
+.empty{padding:28px;text-align:center;color:var(--fa);border:1px dashed var(--line2);border-radius:14px;font-size:13px;background:rgba(255,255,255,.015)}
+.list{display:flex;flex-direction:column;gap:2px}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--line2),transparent);margin:18px 0}
+.seg{display:flex;gap:6px}
+.seg>div{flex:1;height:6px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.seg>div>div{height:100%;background:var(--grad);box-shadow:0 0 10px rgba(124,131,255,.7)}
+.group{font-size:11px;color:var(--fa);font-weight:700;margin:16px 0 6px;text-transform:uppercase;letter-spacing:.1em}
+.chart{position:relative;height:280px}
+.cmp{border-collapse:collapse}
+.cmp th,.cmp td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line)}
+.cmp tr:hover td{background:var(--s2)}
+.cmp th:first-child,.cmp td:first-child{text-align:left;padding-left:0}
+.cmp th{color:var(--mu);font-weight:600;font-size:12px}
+dialog{background:linear-gradient(180deg,#1a2135,#111727);color:var(--tx);border:1px solid var(--line2);border-radius:20px;padding:26px;width:min(460px,calc(100vw - 32px));box-shadow:0 40px 80px -20px rgba(0,0,0,.8)}
+dialog::backdrop{background:rgba(3,5,12,.65);backdrop-filter:blur(6px)}
+dialog form{display:flex;flex-direction:column;gap:14px}
+dialog h3{font-size:17px;font-weight:700}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);opacity:0;pointer-events:none;background:#1a2135;border:1px solid var(--line2);padding:11px 18px;border-radius:14px;display:flex;gap:16px;align-items:center;transition:.25s;z-index:60;font-size:13px;font-weight:500;box-shadow:0 20px 40px -10px rgba(0,0,0,.7)}
+#toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#toast button{border:0;background:none;color:#a5abff;font-weight:700;cursor:pointer}
+.tabbar{display:none}
+
+/* hero (Today) */
+.hero{display:flex;align-items:center;gap:28px;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(120deg,rgba(99,102,241,.38),rgba(139,92,246,.18) 45%,rgba(16,21,36,.55));border-color:rgba(124,131,255,.25);overflow:hidden}
+.hero::after{content:'';position:absolute;right:-80px;top:-120px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(192,132,252,.35),transparent 65%);pointer-events:none}
+.hero .big{font-size:32px}
+.ring{--p:0;--c:var(--ac);width:112px;height:112px;border-radius:50%;flex-shrink:0;display:grid;place-content:center;text-align:center;background:radial-gradient(closest-side,#161c31 79%,transparent 80% 100%),conic-gradient(var(--c) calc(var(--p)*1%),rgba(255,255,255,.08) 0);filter:drop-shadow(0 0 18px color-mix(in srgb,var(--c) 45%,transparent));position:relative;z-index:1}
+.ring b{font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.ring span{font-size:11px;color:var(--mu);margin-top:3px}
+
+/* sparkline, sector rings, tinted cards */
+.spark{display:block;width:100%;height:42px;margin-top:14px;overflow:visible}
+.tint{background:linear-gradient(180deg,color-mix(in srgb,var(--c) 15%,rgba(28,35,58,.62)),rgba(16,21,36,.62) 55%)}
+.tint::after{content:'';position:absolute;left:22px;right:22px;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--c),transparent);opacity:.8}
+.rings{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:18px}
+.ring-item{display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 6px;border-radius:16px;cursor:pointer;transition:background .15s;text-align:center}
+.ring-item:hover{background:var(--s2)}
+.ring-item .ring{width:86px;height:86px}
+.ring-item .ring i{color:var(--c);font-size:13px;margin-bottom:4px}
+.ring-item .ring b{font-size:18px}
+.ring-item>span{font-weight:600;font-size:13px}
+.ring-item small{display:block;color:var(--fa);font-size:11px;font-weight:500;margin-top:2px}
+.hero .seg{max-width:560px}
+.hero p{max-width:620px}
+
+/* timeline */
+.blk{display:grid;grid-template-columns:64px 4px 1fr auto;gap:14px;align-items:center;padding:13px 14px;border-radius:14px;cursor:pointer;transition:background .15s}
+.blk:hover{background:var(--s2)}
+.blk.now{background:linear-gradient(90deg,rgba(99,102,241,.18),rgba(99,102,241,.03));box-shadow:inset 0 0 0 1px rgba(124,131,255,.35)}
+.blk .stripe{align-self:stretch;border-radius:4px}
+.gap{padding:4px 12px 4px 92px;color:var(--fa);font-size:12px}
+
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal div{aspect-ratio:1;border-radius:9px;display:grid;place-content:center;font-size:11.5px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.04);color:var(--mu);transition:.15s}
+.cal div:hover{filter:brightness(1.3)}
+.cal div.sel{outline:2px solid var(--ac);color:#fff;box-shadow:0 0 14px rgba(124,131,255,.5)}
+.cal div.hd{background:none;cursor:default;color:var(--fa);font-size:10.5px;aspect-ratio:auto}
+.cal div.blank{background:none;cursor:default}
+
+/* matrix */
+.mx{overflow:auto;max-height:620px}
+.mx table{border-collapse:separate;border-spacing:3px;font-size:12px}
+.mx th{position:sticky;top:0;background:var(--s1o);color:var(--fa);font-weight:600;z-index:1;cursor:pointer;min-width:18px}
+.mx td.h{position:sticky;left:0;background:var(--s1o);min-width:210px;max-width:210px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;padding-right:10px;z-index:1;color:var(--mu)}
+.mx td.h:hover{color:var(--tx)}
+.mx td.c>div{width:18px;height:18px;border-radius:5px;cursor:pointer}
+.mx td.c>div:hover{outline:1px solid var(--mu)}
+
+@media (max-width:1100px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .rings{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ring-item .ring{width:74px;height:74px}
+  body{flex-direction:column}
+  .side{display:none}
+  .top{padding:12px 16px;flex-wrap:wrap;gap:8px}
+  .top h1{font-size:19px;flex:1 0 60%}
+  #month-select{order:3;flex:1 1 40%;width:auto!important}
+  .daynav{order:4;flex:1 1 50%}
+  .daynav span{flex:1;min-width:0}
+  #view{padding:16px 16px 110px}
+  .wrap,.grid{gap:14px}
+  .card{padding:18px}
+  .g3,.g2,.auto{grid-template-columns:minmax(0,1fr)}
+  .span2{grid-column:auto}
+  .tabbar{display:flex;position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:10px;right:10px;background:rgba(18,24,40,.88);backdrop-filter:blur(20px);border:1px solid var(--line2);border-radius:20px;overflow-x:auto;z-index:40;padding:5px;box-shadow:0 20px 40px -10px rgba(0,0,0,.8)}
+  .tabbar button{flex:1 0 60px;border:0;background:none;color:var(--fa);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;padding:8px 0;cursor:pointer;border-radius:14px}
+  .tabbar button.on{color:#fff;background:var(--grad);box-shadow:0 6px 16px -6px rgba(124,92,246,.9)}
+  .item .act{opacity:1}
+  #countdown{display:none}
+  .gap{padding-left:12px}
+  .hero{gap:18px}
+  .hide-sm{display:none}
+  .ring{width:92px;height:92px}
+  #habits-grid,#tasks-grid,#money-grid{grid-template-columns:minmax(0,1fr)!important}
+}
+@media (max-width:520px){.big{font-size:24px}.hero .big{font-size:24px}}
+</style>
+</head>
+<body>
+<aside class="side">
+  <div class="brand"><i class="fa-solid fa-bolt"></i><div>HAMA.OPS<small>COMMAND CENTER</small></div></div>
+  <div class="nav-label">MENU</div>
+  <div id="nav"></div>
+  <div class="side-foot" id="backup-status"></div>
+  <p class="faint" style="font-size:11px;padding:10px 10px 0">Keys: 1–9 pages · ←/→ day · T today · N new task</p>
+</aside>
+<main>
+  <header class="top">
+    <h1 id="title"></h1>
+    <span id="countdown" class="mu sm"></span>
+    <select id="month-select" class="in" style="width:auto;padding:6px 8px" onchange="switchMonth(this.value)"></select>
+    <div class="daynav">
+      <button class="ib" onclick="shiftDay(-1)" aria-label="Previous day"><i class="fa-solid fa-chevron-left"></i></button>
+      <span id="day-label"></span>
+      <button class="ib" onclick="shiftDay(1)" aria-label="Next day"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+    <button class="btn" onclick="goToday()">Today</button>
+  </header>
+  <div id="view"></div>
+</main>
+<nav class="tabbar" id="tabbar"></nav>
+<dialog id="dlg"><form id="dlg-form" method="dialog"></form></dialog>
+<div id="toast"></div>
+
+<script>
+/* ============ CONSTANTS ============ */
+const KEY = 'hama_ops';
+const SECTORS = [
+  { id: 'Studying', icon: 'fa-graduation-cap' },
+  { id: 'Business', icon: 'fa-briefcase' },
+  { id: 'Dinyan', icon: 'fa-moon' },
+  { id: 'Physical', icon: 'fa-dumbbell' },
+  { id: 'Mindset', icon: 'fa-brain' }
+];
+const SIDS = SECTORS.map(s => s.id);
+const COLORS = { Studying: '#4f8cff', Business: '#10c98f', Dinyan: '#9b6bff', Physical: '#ff8a3d', Mindset: '#f0509b', Sleep: '#7c83b8', Relax: '#22b8cf' };
+const col = s => COLORS[s] || '#656973';
+const XP_HABIT = 10, XP_TASK = { Low: 15, Medium: 30, High: 50 }, XP_LEVEL = 250;
+const PRIO = { High: 3, Medium: 2, Low: 1 };
+const PRIO_COL = { High: 'var(--bad)', Medium: 'var(--warn)', Low: 'var(--ac)' };
+const VIEWS = [
+  ['today', 'Today', 'fa-sun'], ['overview', 'Overview', 'fa-house'], ['timeline', 'Timeline', 'fa-clock'], ['habits', 'Habits', 'fa-list-check'],
+  ['tasks', 'Tasks', 'fa-bolt'], ['money', 'Money', 'fa-wallet'], ['analysis', 'Analysis', 'fa-chart-line'], ['review', 'Review', 'fa-calendar-week'], ['settings', 'Settings', 'fa-sliders']
+];
+const STUDY = [['math', 'Math'], ['physics', 'Physics'], ['si', "Sciences de l'Ingénieur"]];
+// Guesses the subject of Studying blocks that were created without one (e.g. imported months).
+const SUBJECT_RE = { math: /math|analyse|alg[eè]bre/i, physics: /phys/i, si: /\bSI\b|ing[ée]nieur/ };
+
+// Starting defaults = October 2026 targets. Everything here is editable in Settings.
+const DEFAULTS = {
+  habits: {
+    Studying: ['Math: 4h Deep Work / Prepa', 'Physics: 3h Grind', 'SI: Concept Mastery', 'Night Recap (Active Recall)'],
+    Business: ['NextGlow/YallaBac: 1 Hour Strict Timebox', 'Check Daily Metrics & Comms', 'Delegate urgent tasks'],
+    Dinyan: ["Fajr in Jama'ah/On Time", 'Dhuhr/Asr + Adhkar', 'Read 10 Pages Quran', 'Maghrib', 'Ishaa'],
+    Physical: ['Strict Macro Tracking (High Protein)', 'Resistance Training (Heavy, 5x/wk)', 'Cardio / 10k Steps', '7-8h Sleep Recovery'],
+    Mindset: ['Weekly Sunday Planning', 'Lights Out by 22:30', 'End of Day ROI Review']
+  },
+  goals: { ngTarget: 2500, ngAvgDeal: 400, ngCloseRate: 15, math: 60, physics: 60, si: 40, weightDrop: 10, proteinPerKg: 2 },
+  products: [
+    { brand: 'Yalla Bac', group: 'Meetings', name: 'Basic Meet', price: 69, legacy: 'yallabac.basicMeet' },
+    { brand: 'Yalla Bac', group: 'Meetings', name: 'Elite Meet', price: 99, legacy: 'yallabac.eliteMeet' },
+    { brand: 'Yalla Bac', group: 'Meetings', name: 'VIP Meet', price: 269, legacy: 'yallabac.vipMeet' },
+    { brand: 'Yalla Bac', group: 'Books', name: 'TM', price: 299, legacy: 'yallabac.bookTM' },
+    { brand: 'Yalla Bac', group: 'Books', name: 'MP', price: 189, legacy: 'yallabac.bookMP' },
+    { brand: 'Yalla Bac', group: 'Books', name: 'MS Book', price: 139, legacy: 'yallabac.bookMS' },
+    { brand: 'Yalla Bac', group: 'PDF Packs', name: 'Tous Matières', price: 99, legacy: 'yallabac.pdfAll' },
+    { brand: 'Yalla Bac', group: 'PDF Packs', name: 'MP', price: 59, legacy: 'yallabac.pdfMP' },
+    { brand: 'Yalla Bac', group: 'PDF Packs', name: 'MS', price: 39, legacy: 'yallabac.pdfMS' },
+    { brand: 'Yalla Allemand', group: 'PDF Packs', name: 'A1/A2 PDF', price: 49, legacy: 'yallaallemand.pdfA1A2' },
+    { brand: 'Yalla Allemand', group: 'PDF Packs', name: 'B1/B2 PDF', price: 59, legacy: 'yallaallemand.pdfB1B2' },
+    { brand: 'Yalla Allemand', group: 'Books', name: 'A1 Book', price: 49, legacy: 'yallaallemand.bookA1' },
+    { brand: 'Yalla Allemand', group: 'Books', name: 'A2 Book', price: 49, legacy: 'yallaallemand.bookA2' },
+    { brand: 'Yalla Allemand', group: 'Books', name: 'B1 Book', price: 49, legacy: 'yallaallemand.bookB1' },
+    { brand: 'Yalla Allemand', group: 'Books', name: 'B2 Book', price: 49, legacy: 'yallaallemand.bookB2' }
+  ],
+  stages: [
+    { from: 1, to: 7, title: 'System Calibration', desc: 'Transition into full focus. Set the new Prepa rhythm and adjust training. Side hustles capped at 1h.' },
+    { from: 8, to: 15, title: 'Deep Grind', desc: 'Full academic immersion: classes plus maximum self-study. Training intensity peaks. Business on autopilot.' },
+    { from: 16, to: 24, title: 'Endurance', desc: 'Mid-month friction appears. Push through study resistance. Keep the 1h/day side-hustle limit.' },
+    { from: 25, to: 31, title: 'Month Close', desc: 'Prepare for academic reviews. Check physical conditioning. Close out remaining business work.' }
+  ],
+  rules: ['Deficit capped at 20–25%. No crash dieting.', 'Resistance training 5x per week, keep loads heavy.', '10k daily steps to widen the deficit safely.'],
+  resources: ['melusine.eu.org', 'cpge-paradise.com', 'bibmath.net', '"Tout-en-un" MPSI', 'femto-physique.fr', 'physique-en-prepas'],
+  goals1y: { Studying: '', Business: '', Dinyan: '', Physical: '', Mindset: '' },
+  capCategories: ['Savings', ...SIDS],
+  customSectors: []
+};
+
+// Old monthly files' localStorage keys -> month. The 38-day August sprint started Jul 25, so its first 7 days are dropped.
+const LEGACY = {
+  hama_ops_v11_jun_2026: '2026-06', hama_ops_v12_jul_2026: '2026-07', hama_ops_v13_aug_2026_38d: '2026-08',
+  hama_ops_v14_sep_2026_30d: '2026-09', hama_ops_v14_oct_2026_31d: '2026-10'
+};
+
+/* ============ HELPERS ============ */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const pad = n => String(n).padStart(2, '0');
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const clone = o => JSON.parse(JSON.stringify(o));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+const num = (n, dec = 0) => (n || 0).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+const tnd = (n, dec = 2) => num(n, dec) + ' TND';
+const mins = t => { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+const hhmm = m => `${pad(Math.floor(m / 60) % 24)}:${pad(m % 60)}`;
+const dur = m => m < 60 ? m + 'm' : Math.floor(m / 60) + 'h' + (m % 60 ? ' ' + (m % 60) + 'm' : '');
+const lines = s => s.split('\n').map(x => x.trim()).filter(Boolean);
+
+const daysIn = key => { const [y, m] = key.split('-').map(Number); return new Date(y, m, 0).getDate(); };
+const dateOf = (key, day) => { const [y, m] = key.split('-').map(Number); return new Date(y, m - 1, day); };
+const label = (day, key = DB.ui.month) => dateOf(key, day).toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+const monthName = key => dateOf(key, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+const isWeekend = (key, day) => [0, 6].includes(dateOf(key, day).getDay());
+function today() { const n = new Date(); return { key: `${n.getFullYear()}-${pad(n.getMonth() + 1)}`, day: n.getDate() }; }
+
+/* ============ STATE ============ */
+let DB;
+let charts = [];
+let moneyTab = 'overview';
+let matrixRows = [];
+
+const S = () => DB.settings;
+const M = () => DB.months[DB.ui.month];
+const D = (day = DB.ui.day) => M().days[day - 1];
+const N = () => M().days.length;
+const isToday = () => DB.ui.month === today().key && DB.ui.day === today().day;
+// Days of the selected month that have already happened.
+function elapsed() { const t = today(); return DB.ui.month < t.key ? N() : DB.ui.month === t.key ? Math.min(t.day, N()) : 0; }
+const brands = () => [...new Set(S().products.map(p => p.brand))];
+const blockSectors = () => [...SIDS, 'Sleep', 'Relax', ...S().customSectors];
+
+function newDay(habits) {
+  return {
+    timeline: [], reviews: {}, tasks: [], transactions: [], weight: null,
+    habits: Object.fromEntries(SIDS.map(s => [s, (habits[s] || []).map(text => ({ text, done: false }))]))
+  };
+}
+
+function ensureMonth(key) {
+  if (DB.months[key]) return;
+  const prev = Object.keys(DB.months).sort().filter(k => k < key).pop();
+  DB.months[key] = {
+    days: Array.from({ length: daysIn(key) }, () => newDay(S().habits)),
+    macros: {}, goals: { ...S().goals }, budgets: prev ? { ...DB.months[prev].budgets } : {},
+    openingBalance: null, deals: [], sales: [], study: { math: 0, physics: 0, si: 0 }, startWeight: null, autoStudy: true
+  };
+}
+
+function normDay(d) {
+  const habits = {};
+  SIDS.forEach(s => habits[s] = (d.habits?.[s] || []).map(h => ({ text: h.text, done: !!h.done })));
+  return {
+    habits, timeline: d.timeline || [], reviews: d.reviews || {}, weight: d.weight ?? null,
+    tasks: (d.tasks || []).map(t => ({ ...t, id: t.id || uid() })),
+    transactions: (d.transactions || []).map(t => ({ ...t, id: t.id || uid(), amount: +t.amount || 0 }))
+  };
+}
+
+// Converts one old single-month state (Feb–Oct files) into a month record.
+function convertOld(o, key, offset = 0) {
+  const n = daysIn(key), p = o.progress || {};
+  const m = {
+    days: Array.from({ length: n }, (_, i) => o.days[i + offset] ? normDay(o.days[i + offset]) : newDay(S().habits)),
+    macros: { ...(o.macros || {}) }, goals: { ...S().goals }, budgets: { ...(o.capital?.budgets || {}) },
+    openingBalance: o.capital?.startBalance ?? null, deals: [], sales: [],
+    study: { math: p.study?.mathHours || 0, physics: p.study?.physicsHours || 0, si: p.study?.siHours || 0 },
+    startWeight: o.physicalMetrics?.startWeight ?? null
+  };
+  if (p.nextglow?.avgDeal) m.goals.ngAvgDeal = p.nextglow.avgDeal;
+  (p.nextglow?.deals || []).forEach(d => m.deals.push({ id: d.id || uid(), amount: +d.amount || 0, day: clamp((d.day || 1) - offset, 1, n) }));
+  // Old counters had no date, so imported sales land on day 1.
+  DEFAULTS.products.forEach(pr => {
+    const [b, k] = pr.legacy.split('.');
+    for (let i = 0; i < (p[b]?.[k] || 0); i++) m.sales.push({ id: uid(), brand: pr.brand, name: pr.name, price: pr.price, day: 1 });
+  });
+  return m;
+}
+
+function mergeOldSettings(o) {
+  const s = S();
+  (o.customSectors || []).forEach(c => { if (!s.customSectors.includes(c)) s.customSectors.push(c); });
+  (o.capital?.categories || []).forEach(c => { if (!s.capCategories.includes(c)) s.capCategories.push(c); });
+  SIDS.forEach(id => { if (!s.goals1y[id] && o.overwatch?.[id]?.y1) s.goals1y[id] = o.overwatch[id].y1; });
+}
+
+function migrateLegacy() {
+  let n = 0;
+  for (const [k, key] of Object.entries(LEGACY)) {
+    if (DB.months[key]) continue;
+    let o; try { o = JSON.parse(localStorage.getItem(k)); } catch { continue; }
+    if (!o?.days) continue;
+    DB.months[key] = convertOld(o, key, Math.max(0, o.days.length - daysIn(key)));
+    mergeOldSettings(o); n++;
+  }
+  return n;
+}
+
+function load() {
+  try { DB = JSON.parse(localStorage.getItem(KEY)); } catch { DB = null; }
+  if (!DB?.months) {
+    DB = { v: 1, settings: clone(DEFAULTS), months: {}, ui: { view: 'overview', sector: 'Studying' } };
+    const n = migrateLegacy();
+    if (n) setTimeout(() => toast(`Imported ${n} month${n > 1 ? 's' : ''} from your old dashboards`), 400);
+  }
+  const t = today();
+  ensureMonth(t.key);
+  DB.ui.month = t.key; DB.ui.day = t.day; DB.ui.view = 'today';
+  save(false);
+}
+
+function save(edited = true) {
+  if (edited) DB.updatedAt = Date.now();
+  try { localStorage.setItem(KEY, JSON.stringify(DB)); }
+  catch { toast('Could not save: browser storage is full or blocked. Export a backup now.'); }
+  queueBackup();
+  if (edited) queueSync();
+}
+function commit() { save(); render(); }
+function withUndo(msg, fn) {
+  const snap = JSON.stringify(DB);
+  fn(); commit();
+  toast(msg, () => { DB = JSON.parse(snap); commit(); });
+}
+
+/* ============ UI PRIMITIVES ============ */
+function toast(msg, undo) {
+  const t = $('toast');
+  t.innerHTML = `<span>${esc(msg)}</span>${undo ? '<button>Undo</button>' : ''}`;
+  if (undo) t.querySelector('button').onclick = () => { undo(); t.classList.remove('show'); };
+  t.classList.add('show');
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 5000);
+}
+
+// onSubmit(formData, submitterValue) returns false to keep the dialog open.
+function openDlg(html, onSubmit) {
+  const f = $('dlg-form');
+  f.innerHTML = html;
+  f.onsubmit = e => {
+    if (e.submitter?.value === 'cancel') return;
+    e.preventDefault();
+    if (onSubmit(new FormData(f), e.submitter?.value) !== false) $('dlg').close();
+  };
+  $('dlg').showModal();
+}
+const dlgButtons = (ok = 'Save', extra = '') =>
+  `<div class="row" style="margin-top:6px">${extra}<span class="grow"></span><button class="btn" value="cancel" formnovalidate>Cancel</button><button class="btn pri" value="ok">${ok}</button></div>`;
+
+function askNumber(title, desc, value, cb) {
+  openDlg(`<h3>${esc(title)}</h3><p class="mu sm">${esc(desc)}</p>
+    <input class="in" name="v" type="number" step="0.01" required value="${value ?? ''}" autofocus>${dlgButtons()}`,
+    fd => cb(parseFloat(fd.get('v'))));
+}
+
+const bar = (p, color) => `<div class="bar"><div style="width:${clamp(p, 0, 100)}%;${color ? `--c:${color}` : ''}"></div></div>`;
+const badge = (s, icon) => `<span class="badge" style="--c:${col(s)}"><i class="fa-solid ${icon || SECTORS.find(x => x.id === s)?.icon || 'fa-circle'}"></i></span>`;
+const dot = s => `<span class="dot" style="background:${col(s)}"></span>`;
+const empty = msg => `<div class="empty">${msg}</div>`;
+const kpi = (eyebrow, value, foot = '', onclick = '', icon = 'fa-chart-simple', c = '#7c83ff', series = null) =>
+  `<div class="card kpi" style="--c:${c}${onclick ? ';cursor:pointer' : ''}" ${onclick ? `onclick="${onclick}"` : ''}><span class="badge" style="--c:${c}"><i class="fa-solid ${icon}"></i></span><div class="eyebrow">${eyebrow}</div><div class="big">${value}</div>${foot ? `<div class="mu sm" style="margin-top:6px">${foot}</div>` : ''}${series ? spark(series, c) : ''}</div>`;
+// Tiny area chart for a KPI card: one value per day.
+function spark(vals, c) {
+  if (vals.length < 2) return '';
+  const lo = Math.min(...vals), hi = Math.max(...vals), span = hi - lo || 1, id = 'sp' + Math.random().toString(36).slice(2, 8);
+  const pts = vals.map((v, i) => [i / (vals.length - 1) * 100, 30 - (v - lo) / span * 26]);
+  const line = pts.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(2)} ${y.toFixed(2)}`).join('');
+  return `<svg class="spark" viewBox="0 0 100 32" preserveAspectRatio="none"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".35"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient></defs>
+    <path d="${line}L100 32L0 32Z" fill="url(#${id})"/><path d="${line}" fill="none" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>`;
+}
+// Per-day series for the selected month, up to today.
+const daily = f => Array.from({ length: elapsed() }, (_, i) => f(i + 1));
+const dayPct = i => { const x = dayScore(D(i)); return x.total ? x.done / x.total * 100 : 0; };
+const daySpend = i => D(i).transactions.filter(t => t.type !== 'inbound').reduce((a, t) => a + t.amount, 0);
+
+function mkChart(id, config) {
+  if (!window.Chart || !$(id)) return;
+  charts.push(new Chart($(id), config));
+}
+if (window.Chart) {
+  Chart.defaults.color = '#7d869e';
+  Chart.defaults.borderColor = 'rgba(255,255,255,.05)';
+  Chart.defaults.font.family = "'Plus Jakarta Sans', Inter, sans-serif";
+  Chart.defaults.elements.bar.borderRadius = 6;
+  Chart.defaults.elements.line.borderWidth = 2.5;
+  Chart.defaults.elements.point.radius = 0;
+  Chart.defaults.elements.point.hoverRadius = 5;
+  Chart.defaults.plugins.tooltip.cornerRadius = 10;
+  Chart.defaults.font.size = 11;
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.legend.labels.boxWidth = 6;
+  Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(20,26,44,.95)';
+  Chart.defaults.plugins.tooltip.borderColor = 'rgba(255,255,255,.12)';
+  Chart.defaults.plugins.tooltip.borderWidth = 1;
+  Chart.defaults.plugins.tooltip.padding = 10;
+  Chart.defaults.maintainAspectRatio = false;
+}
+const fade = (hex, a) => hex + Math.round(a * 255).toString(16).padStart(2, '0');
+// Vertical gradient fill for area charts
+const glow = hex => ({ chart: { ctx, chartArea: a } }) => {
+  if (!a) return fade(hex, .15);
+  const g = ctx.createLinearGradient(0, a.top, 0, a.bottom);
+  g.addColorStop(0, fade(hex, .38)); g.addColorStop(1, fade(hex, 0));
+  return g;
+};
+
+/* ============ NAVIGATION ============ */
+function render() {
+  charts.forEach(c => c.destroy()); charts = [];
+  const v = DB.ui.view;
+  const navHtml = (cls) => VIEWS.map(([id, name, icon]) =>
+    `<button class="${cls} ${id === v ? 'on' : ''}" onclick="go('${id}')"><i class="fa-solid ${icon}"></i>${cls === 'nav' ? name : `<span>${name}</span>`}</button>`).join('');
+  $('nav').innerHTML = navHtml('nav');
+  $('tabbar').innerHTML = navHtml('');
+  $('title').textContent = VIEWS.find(x => x[0] === v)[1];
+  $('day-label').textContent = dateOf(DB.ui.month, DB.ui.day).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  $('month-select').innerHTML = Object.keys(DB.months).sort().reverse()
+    .map(k => `<option value="${k}" ${k === DB.ui.month ? 'selected' : ''}>${monthName(k)}</option>`).join('');
+  updateCountdown();
+  renderBackupStatus();
+  const after = [];
+  $('view').innerHTML = `<div class="wrap">${VIEW_FNS[v](after)}</div>`;
+  after.forEach(f => f());
+}
+function go(view) { DB.ui.view = view; $('view').scrollTop = 0; commit(); }
+function shiftDay(d) { const n = DB.ui.day + d; if (n >= 1 && n <= N()) { DB.ui.day = n; commit(); } }
+function goToday() { const t = today(); ensureMonth(t.key); DB.ui.month = t.key; DB.ui.day = t.day; commit(); }
+function switchMonth(key) { DB.ui.month = key; DB.ui.day = key === today().key ? today().day : 1; commit(); }
+function updateCountdown() {
+  const t = today();
+  if (DB.ui.month !== t.key) { $('countdown').textContent = ''; return; }
+  const end = dateOf(t.key, N() + 1) - Date.now();
+  $('countdown').textContent = `${Math.floor(end / 864e5)}d ${Math.floor(end % 864e5 / 36e5)}h left`;
+}
+
+/* ============ CALCULATIONS ============ */
+function dayScore(d) {
+  let done = 0, total = 0;
+  SIDS.forEach(s => { total += d.habits[s].length; done += d.habits[s].filter(h => h.done).length; });
+  total += d.tasks.length; done += d.tasks.filter(t => t.done).length;
+  return { done, total };
+}
+function monthScore() {
+  let done = 0, total = 0;
+  for (let i = 1; i <= elapsed(); i++) { const s = dayScore(D(i)); done += s.done; total += s.total; }
+  return { done, total };
+}
+function sectorRate(sid, filter = () => true) {
+  let c = 0, t = 0;
+  for (let i = 1; i <= elapsed(); i++) if (filter(i)) { const h = D(i).habits[sid]; c += h.filter(x => x.done).length; t += h.length; }
+  return t ? c / t : 0;
+}
+function physicalStreak(from = DB.ui.day) {
+  let streak = 0;
+  for (let i = from; i >= 1; i--) {
+    const h = D(i).habits.Physical, done = h.filter(x => x.done).length;
+    if (h.length && done === h.length) streak++;
+    else if (i === from && done === 0) continue; // today not started yet doesn't break the streak
+    else break;
+  }
+  return streak;
+}
+function sectorXP(sid) {
+  let xp = 0;
+  for (let i = 1; i <= Math.max(elapsed(), DB.ui.day); i++) {
+    const d = D(i);
+    xp += d.habits[sid].filter(h => h.done).length * XP_HABIT;
+    d.tasks.filter(t => t.category === sid && t.done).forEach(t => xp += XP_TASK[t.priority] || XP_TASK.Medium);
+  }
+  if (sid === 'Physical') xp += Math.floor(physicalStreak() / 7) * 500;
+  return xp;
+}
+// Net worth carries across months; a month's opening balance (if set) overrides the carried value.
+function netWorth(key = DB.ui.month, day = DB.ui.day) {
+  let bal = 0;
+  for (const k of Object.keys(DB.months).sort()) {
+    if (k > key) break;
+    const m = DB.months[k];
+    if (m.openingBalance != null) bal = m.openingBalance;
+    m.days.forEach((d, i) => { if (k < key || i < day) d.transactions.forEach(t => bal += t.type === 'inbound' ? t.amount : -t.amount); });
+  }
+  return bal;
+}
+const monthTx = () => M().days.flatMap((d, i) => d.transactions.map(t => ({ ...t, day: i + 1 })));
+function spentUpTo(day) { return monthTx().filter(t => t.type !== 'inbound' && t.day <= day).reduce((a, t) => a + t.amount, 0); }
+function runway() {
+  const avg = spentUpTo(DB.ui.day) / DB.ui.day;
+  return avg > 0 ? Math.floor(netWorth() / avg) : null;
+}
+const blockSpan = b => { const s = mins(b.start); let e = mins(b.end); if (e <= s) e += 1440; return [s, e]; };
+const nowMins = () => { const n = new Date(); return n.getHours() * 60 + n.getMinutes(); };
+function subjectOf(b) {
+  if (b.subject) return b.subject === 'other' ? null : b.subject;
+  return Object.keys(SUBJECT_RE).find(k => SUBJECT_RE[k].test(b.desc || '')) || null;
+}
+// Hours per subject from one day's Studying blocks that weren't skipped and ended by `cutoff` (minutes).
+function dayStudy(d, cutoff = Infinity) {
+  const out = { math: 0, physics: 0, si: 0 };
+  d.timeline.forEach(b => { const k = b.cat === 'Studying' && !b.skipped && subjectOf(b), [s, e] = blockSpan(b); if (k && e <= cutoff) out[k] += (e - s) / 60; });
+  return out;
+}
+function timelineStudy(key = DB.ui.month) {
+  const t = today(), out = { math: 0, physics: 0, si: 0 };
+  if (key > t.key) return out;
+  DB.months[key].days.forEach((d, i) => {
+    if (key === t.key && i + 1 > t.day) return;
+    const h = dayStudy(d, key === t.key && i + 1 === t.day ? nowMins() : Infinity);
+    for (const k in out) out[k] += h[k];
+  });
+  return out;
+}
+// Least-squares line through [x, y] points; returns x => y, or null with fewer than 2 distinct x.
+function trend(pts) {
+  if (pts.length < 2) return null;
+  const mx = pts.reduce((a, p) => a + p[0], 0) / pts.length, my = pts.reduce((a, p) => a + p[1], 0) / pts.length;
+  const sxx = pts.reduce((a, p) => a + (p[0] - mx) ** 2, 0);
+  if (!sxx) return null;
+  const b = pts.reduce((a, p) => a + (p[0] - mx) * (p[1] - my), 0) / sxx;
+  return x => my + b * (x - mx);
+}
+// Everything the comparison table and forecasts need about one month, without touching the selected month.
+function monthStats(key) {
+  const m = DB.months[key], n = m.days.length, t = today();
+  const up = key < t.key ? n : key === t.key ? Math.min(t.day, n) : 0;
+  let done = 0, total = 0, inc = 0, out = 0, planned = 0;
+  const sec = Object.fromEntries(SIDS.map(s => [s, [0, 0]]));
+  m.days.forEach((d, i) => {
+    d.transactions.forEach(x => { if (x.type === 'inbound') inc += x.amount; else out += x.amount; });
+    d.timeline.forEach(b => { const [s, e] = blockSpan(b); planned += (e - s) / 60; });
+    if (i >= up) return;
+    const sc = dayScore(d); done += sc.done; total += sc.total;
+    SIDS.forEach(s => { sec[s][0] += d.habits[s].filter(h => h.done).length; sec[s][1] += d.habits[s].length; });
+  });
+  const tl = m.autoStudy ? timelineStudy(key) : {};
+  const weights = m.days.map((d, i) => [i + 1, d.weight]).filter(x => x[1]);
+  return {
+    key, n, up, rate: total ? done / total : null, inc, out, planned,
+    sec: Object.fromEntries(SIDS.map(s => [s, sec[s][1] ? sec[s][0] / sec[s][1] : null])),
+    study: STUDY.reduce((a, [k]) => a + m.study[k] + (tl[k] || 0), 0),
+    ng: m.deals.reduce((a, d) => a + d.amount, 0), products: m.sales.reduce((a, s) => a + s.price, 0),
+    nwNow: netWorth(key, up), w0: weights[0]?.[1] ?? null, w1: weights.at(-1)?.[1] ?? null, weights
+  };
+}
+// Straight-line projection of the month so far to its last day.
+function forecast(key = DB.ui.month) {
+  const s = monthStats(key);
+  if (!s.up) return null;
+  const k = s.n / s.up, tr = trend(s.weights);
+  return { s, ng: s.ng * k, study: s.study * k, weight: tr ? tr(s.n) : null, nw: s.nwNow + (s.inc - s.out) / s.up * (s.n - s.up) };
+}
+// Manual hours (steppers / quick log) plus timeline hours when the month has auto-counting on.
+function studyHours() {
+  const tl = M().autoStudy ? timelineStudy() : {};
+  return Object.fromEntries(STUDY.map(([k]) => [k, +(M().study[k] + (tl[k] || 0)).toFixed(1)]));
+}
+// Sales and deals create a matching income entry in the ledger; `link` ties them together.
+const incomeCat = () => S().capCategories.includes('Business') ? 'Business' : 'Savings';
+function linkIncome(id, amount, desc, day) { D(day).transactions.push({ id: uid(), type: 'inbound', amount, category: incomeCat(), desc, link: id }); }
+function unlinkIncome(id) { M().days.forEach(d => d.transactions = d.transactions.filter(t => t.link !== id)); }
+const ngRevenue = () => M().deals.reduce((a, d) => a + d.amount, 0);
+const brandRevenue = b => M().sales.filter(s => s.brand === b).reduce((a, s) => a + s.price, 0);
+const saleCount = p => M().sales.filter(s => s.brand === p.brand && s.name === p.name).length;
+function latestWeight(upTo = DB.ui.day) {
+  for (let i = upTo; i >= 1; i--) if (D(i).weight) return D(i).weight;
+  return null;
+}
+function stageFor(day) {
+  const st = S().stages;
+  return st.find(s => day >= s.from && day <= s.to) || st[st.length - 1];
+}
+function pendingTasks(upTo = DB.ui.day) {
+  const out = [];
+  for (let i = 1; i <= upTo; i++) D(i).tasks.forEach(t => { if (!t.done) out.push({ ...t, day: i }); });
+  return out.sort((a, b) => (PRIO[b.priority] - PRIO[a.priority]) || a.day - b.day);
+}
+function findTask(id) {
+  for (const d of M().days) { const i = d.tasks.findIndex(t => t.id === id); if (i > -1) return { list: d.tasks, i }; }
+}
+
+/* ============ VIEW: TODAY ============ */
+let quickTab = 'weight';
+function vToday() {
+  const d = D(), ts = dayScore(d), live = isToday(), now = nowMins();
+  d.timeline.sort((a, b) => mins(a.start) - mins(b.start));
+  let cur = null, next = null;
+  if (live) {
+    d.timeline.forEach((b, i) => { const [s, e] = blockSpan(b); if (now >= s && now < e) cur = { b, i, s, e }; else if (s > now && !next) next = { b, i, s, e }; });
+    // A block from yesterday that runs past midnight (e.g. sleep 23:00–06:00)
+    if (!cur && DB.ui.day > 1) D(DB.ui.day - 1).timeline.forEach(b => { const [s, e] = blockSpan(b); if (e > 1440 && now < e - 1440) cur = { b, i: null, s: s - 1440, e: e - 1440 }; });
+  } else next = d.timeline[0] && { b: d.timeline[0], i: 0 };
+  const stage = stageFor(DB.ui.day), streak = physicalStreak();
+  const overdue = pendingTasks(DB.ui.day - 1);
+  const todays = d.tasks.map(t => ({ ...t, day: DB.ui.day })).sort((a, b) => (a.done - b.done) || (PRIO[b.priority] - PRIO[a.priority]));
+  const blockLine = x => `<div class="item" ${x.i == null ? '' : `style="cursor:pointer" onclick="go('timeline');editBlock(${x.i})"`}>
+    <span class="mu" style="min-width:92px">${x.b.start} – ${x.b.end}</span>${dot(x.b.cat)}<span class="grow"><b style="font-weight:500">${esc(x.b.cat)}</b> <span class="mu">${esc(x.b.desc)}</span></span></div>`;
+
+  const forms = {
+    weight: `<form class="row" onsubmit="logWeight(event)"><input class="in" name="w" type="number" step="0.1" min="20" max="300" placeholder="Weight (kg)" value="${d.weight ?? ''}" required><button class="btn pri">Log</button></form>`,
+    study: `<form class="row wrapx" onsubmit="quickStudy(event)"><select class="in grow" name="k" style="min-width:120px">${STUDY.map(([k, n]) => `<option value="${k}">${n}</option>`).join('')}</select>
+      <input class="in" name="h" type="number" step="0.25" min="0.25" placeholder="Hours" required style="width:90px"><button class="btn pri">Log</button></form>
+      <p class="faint sm" style="margin-top:8px">${M().autoStudy ? 'Finished Studying blocks in Timeline are already counted. Log only extra study here.' : 'Adds to this month\'s study hours.'}</p>`,
+    sale: `<form class="row" onsubmit="event.preventDefault();addSale(+this.p.value)"><select class="in grow" name="p">${brands().map(b => `<optgroup label="${esc(b)}">${S().products.map((p, i) => p.brand === b ? `<option value="${i}">${esc(p.name)} · ${p.price} TND</option>` : '').join('')}</optgroup>`).join('')}</select><button class="btn pri">Log</button></form>
+      <form class="row" style="margin-top:8px" onsubmit="addDeal(event)"><input class="in" name="a" type="number" min="1" step="0.01" placeholder="NextGlow deal (TND)" required><button class="btn">Log deal</button></form>
+      <p class="faint sm" style="margin-top:8px">Sales and deals are added to Money as income automatically.</p>`,
+    expense: `<form class="col" style="gap:8px" onsubmit="quickExpense(event)"><div class="row"><input class="in" name="amount" type="number" step="0.01" min="0.01" placeholder="Amount (TND)" required>
+      <select class="in" name="category">${S().capCategories.map(c => `<option>${esc(c)}</option>`).join('')}</select></div>
+      <div class="row"><input class="in" name="desc" placeholder="What for?" required><button class="btn pri">Log</button></div></form>`
+  };
+
+  return `
+  <div class="card hero">
+    <div style="position:relative;z-index:1"><div class="eyebrow" style="color:#c7cbff">${live ? 'Today' : 'Viewing'} · Stage ${S().stages.indexOf(stage) + 1}: ${esc(stage.title)}</div>
+      <div class="big">${dateOf(DB.ui.month, DB.ui.day).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</div></div>
+    <div class="ring" style="--p:${pct(ts.done, ts.total)}${pct(ts.done, ts.total) === 100 ? ';--c:var(--ok)' : ''}"><b>${pct(ts.done, ts.total)}%</b><span>${ts.done} of ${ts.total}</span></div>
+  </div>
+
+  <div class="grid g3">
+    <div class="card span2">
+      ${live ? (cur ? `<div class="row between wrapx"><div><div class="eyebrow">Now</div><div class="mid row" style="gap:10px">${dot(cur.b.cat)}${esc(cur.b.cat)}</div><div class="mu">${esc(cur.b.desc)}</div></div><span class="tag" style="color:var(--ac)">${dur(cur.e - now)} left</span></div>
+          <div style="margin:14px 0 6px">${bar(pct(now - cur.s, cur.e - cur.s), col(cur.b.cat))}</div><div class="row between sm faint"><span>${cur.b.start}</span><span>${cur.b.end}</span></div>`
+        : `<div class="eyebrow">Now</div><div class="mid">Free time</div><p class="mu">${next ? `Next block in ${dur(next.s - now)}.` : d.timeline.length ? 'Nothing else planned today.' : 'No plan for today yet.'}</p>`)
+      : `<div class="eyebrow">Plan</div><div class="mid">${d.timeline.length} blocks</div>`}
+      <div class="hr"></div>
+      <div class="row between"><div class="eyebrow" style="margin:0">${live ? 'Next' : 'First block'}</div><button class="btn sm ghost" onclick="go('timeline')">Timeline <i class="fa-solid fa-arrow-right"></i></button></div>
+      ${next ? blockLine(next) : `<p class="faint sm" style="margin-top:6px">${d.timeline.length ? 'Nothing after this.' : 'Plan your day in Timeline.'}</p>`}
+    </div>
+    <div class="card">
+      <div class="chips">${[['weight', 'Weight'], ['study', 'Study'], ['sale', 'Sale'], ['expense', 'Expense']].map(([k, n]) => `<button class="chip ${quickTab === k ? 'on' : ''}" onclick="quickTab='${k}';render()">${n}</button>`).join('')}</div>
+      <div style="margin-top:14px">${forms[quickTab]}</div>
+    </div>
+  </div>
+
+  <div class="grid g3" style="align-items:start">
+    <div class="card span2">
+      <h3>Checklist</h3><p class="sub">All sectors for ${label(DB.ui.day)}.</p>
+      ${SECTORS.filter(s => d.habits[s.id].length).map(s => {
+        const h = d.habits[s.id];
+        return `<div class="group row" style="gap:8px">${dot(s.id)}${s.id}<span class="faint" style="font-weight:500">${h.filter(x => x.done).length}/${h.length}</span></div>` +
+          h.map((x, i) => `<label class="item" style="cursor:pointer"><input type="checkbox" class="chk" ${x.done ? 'checked' : ''} onchange="toggleH('${s.id}',${i})"><span class="${x.done ? 'done-t' : ''}">${esc(x.text)}</span></label>`).join('');
+      }).join('') || empty('No habits today. Add them in Habits or Settings.')}
+    </div>
+    <div class="col" style="gap:16px">
+      <div class="card">
+        <h3>Tasks</h3>
+        <form class="row" style="margin:12px 0 6px" onsubmit="quickTask(event)"><input class="in" id="quick-task" name="t" placeholder="Add a task for ${label(DB.ui.day)}" required>
+          <select class="in" name="p" style="width:auto"><option>High</option><option selected>Medium</option><option>Low</option></select></form>
+        ${overdue.length ? `<div class="group bad">Overdue · ${overdue.length}</div><div class="list">${overdue.map(taskRow).join('')}</div>` : ''}
+        <div class="list">${todays.length ? todays.map(taskRow).join('') : `<p class="faint sm" style="padding:8px 2px">No tasks for this day.</p>`}</div>
+      </div>
+      <div class="card">
+        <div class="row between"><span class="eyebrow" style="margin:0">7-day discipline</span><span class="sm mu">${streak}/7</span></div>
+        <div style="margin-top:8px">${bar(pct(Math.min(streak, 7), 7), streak >= 7 ? 'var(--ok)' : col('Physical'))}</div>
+      </div>
+    </div>
+  </div>`;
+}
+function toggleH(sid, i) { const h = D().habits[sid][i]; h.done = !h.done; commit(); }
+function quickStudy(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target), k = fd.get('k'), h = parseFloat(fd.get('h'));
+  if (h > 0) { M().study[k] += h; commit(); toast(`+${h}h ${STUDY.find(x => x[0] === k)[1]}`); }
+}
+function quickExpense(e) {
+  e.preventDefault();
+  const fd = Object.fromEntries(new FormData(e.target));
+  D().transactions.push({ id: uid(), type: 'outbound', amount: parseFloat(fd.amount), category: fd.category, desc: fd.desc.trim() });
+  commit(); toast(`Expense logged: −${tnd(parseFloat(fd.amount), 0)}`);
+}
+function quickTask(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  D().tasks.push({ id: uid(), title: fd.get('t').trim(), time: '', priority: fd.get('p'), category: 'None', done: false });
+  commit(); $('quick-task')?.focus();
+}
+
+/* ============ VIEW: OVERVIEW ============ */
+function vOverview(after) {
+  const m = M(), g = m.goals, d = D();
+  const ts = dayScore(d), ms = monthScore();
+  const nw = netWorth(), spent = spentUpTo(N()), rw = runway();
+  const stage = stageFor(DB.ui.day), st = S().stages, si = st.indexOf(stage);
+  const ng = ngRevenue(), dealsNeeded = Math.ceil(Math.max(0, g.ngTarget - ng) / (g.ngAvgDeal || 1));
+  const w = latestWeight(), streak = physicalStreak();
+  const ops = pendingTasks(), hours = studyHours();
+
+  after.push(() => {
+    const data = M().days.map(x => x.weight);
+    if (!data.some(Boolean)) return;
+    mkChart('weight-chart', {
+      type: 'line',
+      data: { labels: M().days.map((_, i) => label(i + 1)), datasets: [{ data, borderColor: col('Physical'), backgroundColor: glow(col('Physical')), fill: true, spanGaps: true, tension: .4, pointRadius: 3, pointBackgroundColor: col('Physical') }] },
+      options: { plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } } } }
+    });
+  });
+
+  const hr = new Date().getHours();
+  return `
+  <div class="card hero">
+    <div class="grow" style="position:relative;z-index:1;min-width:240px">
+      <div class="eyebrow" style="color:#c7cbff">${hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening'} · ${monthName(DB.ui.month)} · Day ${DB.ui.day} of ${N()}</div>
+      <div class="big">${esc(stage.title)}</div>
+      <p class="mu" style="margin-top:6px">Stage ${si + 1} of ${st.length} · ${label(stage.from)} – ${label(Math.min(stage.to, N()))}. ${esc(stage.desc)}</p>
+      <div class="seg" style="margin-top:18px">${st.map((s, i) =>
+        `<div><div style="width:${i < si ? 100 : i > si ? 0 : pct(DB.ui.day - s.from + 1, Math.min(s.to, N()) - s.from + 1)}%"></div></div>`).join('')}</div>
+    </div>
+    <div class="ring hide-sm" style="--p:${pct(ms.done, ms.total)};--c:#a78bfa"><b>${pct(ms.done, ms.total)}%</b><span>this month</span></div>
+  </div>
+
+  <div class="grid g4">
+    ${kpi(isToday() ? 'Today' : label(DB.ui.day), pct(ts.done, ts.total) + '%', `${ts.done} of ${ts.total} done`, "go('habits')", 'fa-bullseye', '#7c83ff', daily(dayPct).slice(-14))}
+    ${kpi('This month', pct(ms.done, ms.total) + '%', `${ms.done} of ${ms.total} done`, "go('analysis')", 'fa-calendar-check', '#4f8cff', daily(i => { let a = 0; for (let j = 1; j <= i; j++) a += dayPct(j); return a / i; }))}
+    ${kpi('Net worth', tnd(nw, 0), rw == null ? 'No spending yet' : `Runway ${num(rw)} days`, "moneyTab='overview';go('money')", 'fa-wallet', '#10c98f', daily(i => netWorth(DB.ui.month, i)))}
+    ${kpi('Spent this month', tnd(spent, 0), `${tnd(spent / Math.max(1, elapsed()), 0)} / day`, "moneyTab='charts';go('money')", 'fa-receipt', '#f0509b', daily(daySpend).slice(-14))}
+  </div>
+
+  ${forecastCard()}
+
+  <div class="card">
+    <div class="row between wrapx"><h3><span class="badge"><i class="fa-solid fa-layer-group"></i></span>Sectors this month</h3><span class="faint sm">Habits done so far · tap one to open it</span></div>
+    <div class="rings">${SECTORS.map(x => {
+      const r = Math.round(sectorRate(x.id) * 100), th = d.habits[x.id];
+      return `<div class="ring-item" onclick="DB.ui.sector='${x.id}';go('habits')"><div class="ring" style="--p:${r};--c:${col(x.id)}"><i class="fa-solid ${x.icon}"></i><b>${r}%</b></div>
+        <div><span>${x.id}</span><small>${th.filter(h => h.done).length}/${th.length} ${isToday() ? 'today' : label(DB.ui.day)}</small></div></div>`;
+    }).join('')}</div>
+  </div>
+
+  <div class="grid auto">
+    <div class="card tint" style="--c:${col('Studying')}">
+      <h3>${badge('Studying')}MPSI / MP</h3>
+      <p class="sub">Absolute priority. Math › Physics › SI.${m.autoStudy ? ' Finished Timeline blocks count automatically.' : ''}</p>
+      <div class="col" style="gap:16px">
+        ${STUDY.map(([k, name]) => `
+          <div>
+            <div class="row between" style="margin-bottom:8px"><span>${name}</span>
+              <div class="row"><span class="mu sm">${hours[k]}h / ${g[k]}h</span>
+                <div class="stepper"><button onclick="addStudy('${k}',-1)" aria-label="Remove 1 hour">−</button><button onclick="addStudy('${k}',1)" aria-label="Add 1 hour">+</button></div></div>
+            </div>${bar(pct(hours[k], g[k]), col('Studying'))}
+          </div>`).join('')}
+      </div>
+      <div class="hr"></div>
+      <div class="chips">${S().resources.map(r => `<span class="tag">${esc(r)}</span>`).join('')}</div>
+    </div>
+
+    <div class="card tint" style="--c:${col('Physical')}">
+      <h3>${badge('Physical')}Physique</h3>
+      <p class="sub">Target −${g.weightDrop} kg. Recovery and heavy lifts.</p>
+      <div class="grid g2" style="gap:12px">
+        <div><div class="eyebrow">Latest weight</div><div class="mid">${w ? w + ' kg' : '—'}</div></div>
+        <div><div class="eyebrow">Protein goal</div><div class="mid">${w ? Math.round(w * g.proteinPerKg) + ' g' : '—'}</div></div>
+      </div>
+      <form class="row" style="margin-top:16px" onsubmit="logWeight(event)">
+        <input class="in" name="w" type="number" step="0.1" min="20" max="300" placeholder="Weight on ${label(DB.ui.day)} (kg)" value="${d.weight ?? ''}">
+        <button class="btn">Log</button>
+      </form>
+      <div class="hr"></div>
+      <div class="list sm">${S().rules.map(r => `<div class="row" style="padding:3px 0"><i class="fa-solid fa-check faint" style="font-size:11px"></i><span class="mu">${esc(r)}</span></div>`).join('')}</div>
+    </div>
+
+    <div class="card tint" style="--c:${col('Business')}">
+      <h3>${badge('Business')}NextGlow</h3>
+      <p class="sub">Goal ${tnd(g.ngTarget, 0)} this month.</p>
+      <div class="row between" style="align-items:baseline"><span class="big">${tnd(ng, 0)}</span><span class="mu sm">${pct(ng, g.ngTarget)}%</span></div>
+      <div style="margin:10px 0 16px">${bar(pct(ng, g.ngTarget), col('Business'))}</div>
+      <div class="grid g2" style="gap:12px">
+        <label class="f">Avg deal (TND)<input class="in" type="number" min="1" value="${g.ngAvgDeal}" onchange="setGoal('ngAvgDeal', this.value)"></label>
+        <div><div class="eyebrow">Still needed</div><div><b>${dealsNeeded}</b> deals → <b>${Math.ceil(dealsNeeded / ((g.ngCloseRate || 15) / 100))}</b> leads</div></div>
+      </div>
+      <form class="row" style="margin-top:14px" onsubmit="addDeal(event)">
+        <input class="in" name="a" type="number" min="1" step="0.01" placeholder="Deal amount (TND)" required>
+        <button class="btn">Log deal</button>
+      </form>
+      <div class="list" style="margin-top:8px;max-height:150px;overflow:auto">
+        ${m.deals.slice().reverse().map(x => `<div class="item"><span class="grow">+${tnd(x.amount, 0)}</span><span class="mu sm">${label(x.day)}</span><button class="btn ghost sm act" onclick="delDeal('${x.id}')" aria-label="Delete deal"><i class="fa-solid fa-trash"></i></button></div>`).join('')}
+      </div>
+    </div>
+
+    ${brands().map(b => {
+      const groups = [...new Set(S().products.filter(p => p.brand === b).map(p => p.group))];
+      return `<div class="card">
+        <div class="row between"><h3 style="font-size:14px;font-weight:600">${esc(b)}</h3><span class="mid">${tnd(brandRevenue(b), 0)}</span></div>
+        <p class="sub" style="margin-bottom:4px">Autopilot sales this month. + logs a sale on ${label(DB.ui.day)}.</p>
+        ${groups.map(gr => `<div class="group">${esc(gr)}</div>` + S().products.map((p, i) => p.brand !== b || p.group !== gr ? '' : `
+          <div class="item" style="padding:5px 4px"><span class="grow">${esc(p.name)} <span class="faint sm">${p.price} TND</span></span>
+            <div class="stepper"><button onclick="removeSale(${i})" aria-label="Remove sale">−</button><span>${saleCount(p)}</span><button onclick="addSale(${i})" aria-label="Add sale">+</button></div></div>`).join('')).join('')}
+      </div>`;
+    }).join('')}
+  </div>
+
+  <div class="grid g3">
+    <div class="card span2">
+      <div class="row between"><h3>${badge('Physical')}Weight</h3><span class="mu sm">${w ? w + ' kg' : ''}</span></div>
+      <div class="chart" style="height:240px;margin-top:12px">${M().days.some(x => x.weight) ? '<canvas id="weight-chart"></canvas>' : empty('Log a weight to start the chart.')}</div>
+    </div>
+    <div class="card">
+      <h3>7-day discipline</h3>
+      <p class="sub">Every Physical habit done for 7 days in a row.</p>
+      <div class="big">${streak}<span class="mu" style="font-size:16px"> / 7 days</span></div>
+      <div style="margin:12px 0">${bar(pct(Math.min(streak, 7), 7), streak >= 7 ? 'var(--ok)' : col('Physical'))}</div>
+      <span class="tag" ${streak >= 7 ? 'style="color:var(--ok)"' : ''}><i class="fa-solid fa-burger"></i>Reward: cheat meal ${streak >= 7 ? '· unlocked' : ''}</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row between"><h3>Open tasks</h3><button class="btn sm" onclick="go('tasks')">All tasks</button></div>
+    <div class="list" style="margin-top:10px">${ops.length ? ops.slice(0, 6).map(taskRow).join('') : empty('Nothing pending.')}</div>
+  </div>`;
+}
+
+function forecastCard() {
+  if (DB.ui.month !== today().key) return '';
+  const fc = forecast(), g = M().goals;
+  if (!fc || fc.s.up < 3) return '';
+  const studyGoal = g.math + g.physics + g.si, sw = M().startWeight, wGoal = sw ? sw - g.weightDrop : null;
+  const item = (name, value, goal, ok) => `<div><div class="eyebrow">${name}</div><div class="mid ${ok == null ? '' : ok ? 'ok' : 'bad'}">${value}</div><div class="faint sm">${goal}</div></div>`;
+  return `<div class="card">
+    <div class="row between wrapx"><h3><i class="fa-solid fa-chart-line" style="color:var(--ac)"></i>Month-end forecast</h3><span class="faint sm">If the next ${fc.s.n - fc.s.up} days go like the first ${fc.s.up}</span></div>
+    <div class="grid g4" style="margin-top:14px">
+      ${item('NextGlow', tnd(fc.ng, 0), `Goal ${tnd(g.ngTarget, 0)}`, fc.ng >= g.ngTarget)}
+      ${item('Study hours', Math.round(fc.study) + 'h', `Goal ${studyGoal}h`, fc.study >= studyGoal)}
+      ${item('Weight', fc.weight ? fc.weight.toFixed(1) + ' kg' : '—', wGoal ? `Goal ${wGoal.toFixed(1)} kg` : 'Needs 2+ weigh-ins', fc.weight && wGoal ? fc.weight <= wGoal : null)}
+      ${item('Net worth', tnd(fc.nw, 0), `Now ${tnd(fc.s.nwNow, 0)}`, null)}
+    </div></div>`;
+}
+
+function taskRow(t) {
+  const overdue = t.day < DB.ui.day && !t.done;
+  return `<div class="item">
+    <input type="checkbox" class="chk" ${t.done ? 'checked' : ''} onchange="toggleTask('${t.id}')" aria-label="Done">
+    <div class="grow"><div class="${t.done ? 'done-t' : ''}">${esc(t.title)}</div>
+      <div class="row wrapx sm mu" style="gap:4px 12px;margin-top:2px">
+        <span class="row" style="gap:6px"><span class="dot" style="background:${PRIO_COL[t.priority]}"></span>${t.priority}</span>
+        ${t.time ? `<span>${t.time}</span>` : ''}
+        ${t.category && t.category !== 'None' ? `<span class="row" style="gap:6px">${dot(t.category)}${esc(t.category)}</span>` : ''}
+        <span ${overdue ? 'class="bad"' : ''}>${overdue ? 'Overdue · ' : ''}${label(t.day)}</span>
+      </div></div>
+    <button class="btn ghost sm act" onclick="delTask('${t.id}')" aria-label="Delete task"><i class="fa-solid fa-trash"></i></button>
+  </div>`;
+}
+
+// Manual hours may go negative to correct timeline hours, but the total never drops below 0.
+function addStudy(k, delta) {
+  const tl = M().autoStudy ? timelineStudy()[k] : 0;
+  M().study[k] = Math.max(-tl, M().study[k] + delta); commit();
+}
+function setGoal(k, v) { const n = parseFloat(v); if (n > 0) { M().goals[k] = n; commit(); } }
+function addDeal(e) {
+  e.preventDefault();
+  const a = parseFloat(new FormData(e.target).get('a'));
+  if (!(a > 0)) return;
+  const id = uid();
+  M().deals.push({ id, amount: a, day: DB.ui.day });
+  linkIncome(id, a, 'NextGlow deal', DB.ui.day);
+  commit(); toast(`Deal logged: +${tnd(a, 0)} added to Money`);
+}
+function delDeal(id) { withUndo('Deal and its income entry deleted', () => { M().deals = M().deals.filter(d => d.id !== id); unlinkIncome(id); }); }
+function addSale(i) {
+  const p = S().products[i], id = uid();
+  M().sales.push({ id, brand: p.brand, name: p.name, price: p.price, day: DB.ui.day });
+  linkIncome(id, p.price, `${p.brand} · ${p.name}`, DB.ui.day);
+  commit(); toast(`${p.name} sold: +${tnd(p.price, 0)} added to Money`);
+}
+function removeSale(i) {
+  const p = S().products[i], s = M().sales;
+  const idx = s.map(x => x.brand === p.brand && x.name === p.name).lastIndexOf(true);
+  if (idx > -1) { unlinkIncome(s[idx].id); s.splice(idx, 1); commit(); }
+}
+function logWeight(e) {
+  e.preventDefault();
+  const v = parseFloat(new FormData(e.target).get('w'));
+  if (!(v > 0)) return;
+  D().weight = v;
+  if (M().startWeight == null) M().startWeight = v;
+  commit(); toast(`Weight logged for ${label(DB.ui.day)}`);
+}
+
+/* ============ VIEW: TIMELINE ============ */
+function vTimeline() {
+  const tl = D().timeline;
+  tl.sort((a, b) => mins(a.start) - mins(b.start));
+  const now = new Date(), nowM = now.getHours() * 60 + now.getMinutes();
+  let html = '', last = null, planned = 0;
+  tl.forEach((b, i) => {
+    const s = mins(b.start); let e = mins(b.end); if (e <= s) e += 1440;
+    planned += e - s;
+    if (last != null && s > last) html += `<div class="gap">Free · ${dur(s - last)}</div>`;
+    const live = isToday() && nowM >= s && nowM < e, subj = b.cat === 'Studying' && subjectOf(b);
+    html += `<div class="blk ${live ? 'now' : ''}" onclick="editBlock(${i})" ${b.skipped ? 'style="opacity:.45"' : ''}>
+      <div><div style="font-weight:600">${b.start}</div><div class="faint sm">${b.end}</div></div>
+      <div class="stripe" style="background:${col(b.cat)}"></div>
+      <div style="min-width:0"><div style="font-weight:500">${esc(b.cat)}${subj ? ` <span class="tag">${STUDY.find(x => x[0] === subj)[1]}</span>` : ''}${b.skipped ? ' <span class="tag">Skipped</span>' : ''}${live ? ' <span class="tag" style="color:var(--ac)">Now</span>' : ''}</div><div class="mu sm" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(b.desc)}</div></div>
+      <span class="tag">${dur(e - s)}</span></div>`;
+    last = Math.max(last ?? 0, e);
+  });
+  const prev = DB.ui.day > 1 ? D(DB.ui.day - 1).timeline : [];
+  return `
+  <div class="row between wrapx">
+    <span class="mu">${tl.length ? `${tl.length} blocks · ${dur(planned)} planned` : 'No blocks yet for this day.'}</span>
+    <div class="row">
+      ${!tl.length && prev.length ? `<button class="btn" onclick="copyPrevDay()"><i class="fa-regular fa-copy"></i> Copy ${label(DB.ui.day - 1)}</button>` : ''}
+      <button class="btn pri" onclick="editBlock()"><i class="fa-solid fa-plus"></i> Add block</button>
+    </div>
+  </div>
+  <div class="card" style="padding:8px">${tl.length ? html : empty('Plan your day: add time blocks for study, training, business and rest.')}</div>`;
+}
+
+function editBlock(i) {
+  const b = i == null ? { start: '', end: '', cat: 'Studying', desc: '' } : D().timeline[i];
+  const opts = blockSectors().map(s => `<option ${s === b.cat ? 'selected' : ''}>${esc(s)}</option>`).join('') + '<option value="__new">+ New sector…</option>';
+  openDlg(`<h3>${i == null ? 'Add block' : 'Edit block'}</h3>
+    <p id="overlap" class="bad sm" hidden><i class="fa-solid fa-triangle-exclamation"></i> Overlaps another block</p>
+    <div class="grid g2" style="gap:12px">
+      <label class="f">Start<input class="in" type="time" name="start" required value="${b.start}"></label>
+      <label class="f">End<input class="in" type="time" name="end" required value="${b.end}"></label>
+    </div>
+    <label class="f">Sector<select class="in" name="cat" onchange="this.form.newcat.hidden=this.value!=='__new';$('subj').hidden=this.value!=='Studying'">${opts}</select></label>
+    <input class="in" name="newcat" placeholder="New sector name" hidden>
+    <label class="f" id="subj" ${b.cat === 'Studying' ? '' : 'hidden'}>Subject (counts toward study hours)<select class="in" name="subject">
+      ${STUDY.map(([k, n]) => `<option value="${k}" ${subjectOf(b) === k ? 'selected' : ''}>${n}</option>`).join('')}<option value="other" ${b.cat === 'Studying' && !subjectOf(b) ? 'selected' : ''}>Other (not counted)</option></select></label>
+    <label class="f">What<input class="in" name="desc" value="${esc(b.desc)}" placeholder="e.g. Deep work: integrals"></label>
+    <label class="row sm mu" style="gap:8px"><input type="checkbox" class="chk" name="skipped" ${b.skipped ? 'checked' : ''}>Skipped: didn't happen (not counted in study hours)</label>
+    ${dlgButtons(i == null ? 'Add' : 'Save', i == null ? '' : '<button class="btn ghost danger" value="delete" formnovalidate><i class="fa-solid fa-trash"></i> Delete</button>')}`,
+    (fd, action) => {
+      if (action === 'delete') { withUndo('Block deleted', () => D().timeline.splice(i, 1)); return; }
+      let cat = fd.get('cat');
+      if (cat === '__new') {
+        cat = fd.get('newcat').trim();
+        if (!cat) return false;
+        if (!blockSectors().includes(cat)) S().customSectors.push(cat);
+      }
+      const blk = { start: fd.get('start'), end: fd.get('end'), cat, desc: fd.get('desc').trim(), skipped: fd.has('skipped') };
+      if (cat === 'Studying') blk.subject = fd.get('subject');
+      if (i == null) D().timeline.push(blk); else D().timeline[i] = blk;
+      commit();
+    });
+  const f = $('dlg-form');
+  f.oninput = () => {
+    const s = mins(f.start.value); let e = mins(f.end.value); if (e <= s) e += 1440;
+    $('overlap').hidden = !(f.start.value && f.end.value) || !D().timeline.some((x, j) => {
+      if (j === i) return false;
+      const xs = mins(x.start); let xe = mins(x.end); if (xe <= xs) xe += 1440;
+      return s < xe && e > xs;
+    });
+  };
+}
+function copyPrevDay() { D().timeline = clone(D(DB.ui.day - 1).timeline); commit(); toast('Timeline copied'); }
+
+/* ============ VIEW: HABITS ============ */
+function vHabits() {
+  const sid = DB.ui.sector, d = D(), habits = d.habits[sid];
+  const done = habits.filter(h => h.done).length;
+  const { level, cur, p } = (xp => ({ level: Math.floor(xp / XP_LEVEL) + 1, cur: xp % XP_LEVEL, p: pct(xp % XP_LEVEL, XP_LEVEL) }))(sectorXP(sid));
+  const lead = (dateOf(DB.ui.month, 1).getDay() + 6) % 7; // Monday-first calendar offset
+  const cal = ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map(x => `<div class="hd">${x}</div>`).join('') + '<div class="blank"></div>'.repeat(lead) +
+    M().days.map((x, i) => {
+      const h = x.habits[sid], r = h.length ? h.filter(y => y.done).length / h.length : 0;
+      return `<div class="${i + 1 === DB.ui.day ? 'sel' : ''}" style="${r ? `background:color-mix(in srgb,${col(sid)} ${Math.round(15 + r * 55)}%,var(--s2));color:var(--tx)` : ''}" onclick="DB.ui.day=${i + 1};commit()" title="${label(i + 1)}">${i + 1}</div>`;
+    }).join('');
+
+  return `
+  <div class="chips">${SECTORS.map(s => {
+    const h = d.habits[s.id];
+    return `<button class="chip ${s.id === sid ? 'on' : ''}" onclick="DB.ui.sector='${s.id}';commit()">${dot(s.id)}${s.id} <span class="faint">${h.filter(x => x.done).length}/${h.length}</span></button>`;
+  }).join('')}</div>
+
+  <div class="grid" style="grid-template-columns:minmax(0,1fr) 280px;align-items:start" id="habits-grid">
+    <div class="col" style="gap:16px">
+      <div class="card">
+        <div class="row between wrapx" style="margin-bottom:6px">
+          <div><div class="eyebrow">${label(DB.ui.day)} · ${sid}</div><div class="big">${pct(done, habits.length)}%</div></div>
+          <div style="min-width:180px"><div class="row between sm mu" style="margin-bottom:6px"><span>Level ${level}</span><span>${cur} / ${XP_LEVEL} XP</span></div>${bar(p, col(sid))}</div>
+        </div>
+        <div class="list" style="margin-top:12px">
+          ${habits.map((h, i) => `<div class="item">
+            <input type="checkbox" class="chk" ${h.done ? 'checked' : ''} onchange="toggleHabit(${i})" aria-label="Done">
+            <input class="ghostin ${h.done ? 'done-t' : ''}" value="${esc(h.text)}" onchange="renameHabit(${i}, this.value)">
+            <button class="btn ghost sm act" onclick="delHabit(${i})" aria-label="Delete habit"><i class="fa-solid fa-trash"></i></button>
+          </div>`).join('') || empty('No habits for this sector today.')}
+        </div>
+        <form class="row wrapx" style="margin-top:14px" onsubmit="addHabit(event)">
+          <input class="in grow" name="t" placeholder="Add a habit" required style="min-width:200px">
+          <label class="row sm mu" style="gap:6px"><input type="checkbox" class="chk" name="rest" checked>Remaining days too</label>
+          <button class="btn">Add</button>
+        </form>
+        <p class="faint sm" style="margin-top:10px">Renaming or deleting a habit applies from ${label(DB.ui.day)} to month end.</p>
+      </div>
+      <div class="card">
+        <h3>Reflection · ${label(DB.ui.day)}</h3>
+        <textarea class="in" style="margin-top:12px" placeholder="Friction points, mistakes, adjustments…" onchange="D().reviews[DB.ui.sector]=this.value;save()">${esc(d.reviews[sid] || '')}</textarea>
+      </div>
+    </div>
+    <div class="col" style="gap:16px">
+      <div class="card"><div class="cal">${cal}</div></div>
+      <div class="card">
+        <div class="eyebrow">1-year goal</div>
+        <p style="margin-bottom:14px">${esc(S().goals1y[sid]) || '<span class="faint">Not set. <a href="#" onclick="go(\'settings\');return false" style="color:var(--ac)">Set in Settings</a></span>'}</p>
+        <div class="eyebrow">Objective this month</div>
+        <textarea class="in" placeholder="The one result that matters for ${sid} this month…" onchange="M().macros[DB.ui.sector]=this.value;save()">${esc(M().macros[sid] || '')}</textarea>
+      </div>
+    </div>
+  </div>`;
+}
+const habitList = day => D(day).habits[DB.ui.sector];
+function toggleHabit(i) { const h = habitList()[i]; h.done = !h.done; commit(); }
+function forRestOfMonth(fn) { for (let day = DB.ui.day; day <= N(); day++) fn(habitList(day), day); }
+function renameHabit(i, val) {
+  val = val.trim(); const old = habitList()[i].text;
+  if (!val || val === old) return render();
+  forRestOfMonth(list => list.forEach(h => { if (h.text === old) h.text = val; }));
+  commit();
+}
+function delHabit(i) {
+  const old = habitList()[i].text;
+  withUndo('Habit removed', () => forRestOfMonth(list => { const j = list.findIndex(h => h.text === old); if (j > -1) list.splice(j, 1); }));
+}
+function addHabit(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target), t = fd.get('t').trim();
+  if (!t) return;
+  forRestOfMonth((list, day) => { if ((fd.get('rest') || day === DB.ui.day) && !list.some(h => h.text === t)) list.push({ text: t, done: false }); });
+  commit();
+}
+
+/* ============ VIEW: TASKS ============ */
+function vTasks() {
+  const overdue = pendingTasks(DB.ui.day - 1);
+  const todays = D().tasks.map(t => ({ ...t, day: DB.ui.day })).sort((a, b) => (a.done - b.done) || (PRIO[b.priority] - PRIO[a.priority]));
+  return `
+  <div class="grid" style="grid-template-columns:340px minmax(0,1fr);align-items:start" id="tasks-grid">
+    <form class="card col" onsubmit="addTask(event)">
+      <h3>New task</h3>
+      <label class="f">Title<input class="in" name="title" required placeholder="What needs doing?"></label>
+      <div class="grid g2" style="gap:12px">
+        <label class="f">Day<select class="in" name="day">${M().days.map((_, i) => `<option value="${i + 1}" ${i + 1 === DB.ui.day ? 'selected' : ''}>${label(i + 1)}</option>`).join('')}</select></label>
+        <label class="f">Time<input class="in" type="time" name="time"></label>
+        <label class="f">Priority<select class="in" name="priority"><option>High</option><option selected>Medium</option><option>Low</option></select></label>
+        <label class="f">Sector<select class="in" name="category"><option>None</option>${SIDS.map(s => `<option>${s}</option>`).join('')}</select></label>
+      </div>
+      <button class="btn pri">Add task</button>
+    </form>
+    <div class="col" style="gap:16px">
+      ${overdue.length ? `<div class="card"><h3 class="bad"><i class="fa-solid fa-triangle-exclamation"></i>Overdue · ${overdue.length}</h3><div class="list" style="margin-top:8px">${overdue.map(taskRow).join('')}</div></div>` : ''}
+      <div class="card"><h3>${label(DB.ui.day)}</h3><div class="list" style="margin-top:8px">${todays.length ? todays.map(taskRow).join('') : empty('No tasks for this day.')}</div></div>
+    </div>
+  </div>`;
+}
+function addTask(e) {
+  e.preventDefault();
+  const fd = Object.fromEntries(new FormData(e.target));
+  D(+fd.day).tasks.push({ id: uid(), title: fd.title.trim(), time: fd.time, priority: fd.priority, category: fd.category, done: false });
+  commit(); toast(`Task added to ${label(+fd.day)}`);
+}
+function toggleTask(id) { const f = findTask(id); if (f) { f.list[f.i].done = !f.list[f.i].done; commit(); } }
+function delTask(id) { withUndo('Task deleted', () => { const f = findTask(id); if (f) f.list.splice(f.i, 1); }); }
+
+/* ============ VIEW: MONEY ============ */
+function vMoney(after) {
+  const m = M(), tx = monthTx();
+  const inbound = tx.filter(t => t.type === 'inbound').reduce((a, t) => a + t.amount, 0);
+  const out = tx.filter(t => t.type !== 'inbound').reduce((a, t) => a + t.amount, 0);
+  const rw = runway(), cats = S().capCategories;
+  const spentBy = {}, inBy = {};
+  tx.forEach(t => { const o = t.type === 'inbound' ? inBy : spentBy; o[t.category] = (o[t.category] || 0) + t.amount; });
+
+  const tabs = [['overview', 'Ledger'], ['budgets', 'Budgets'], ['charts', 'Charts']]
+    .map(([k, n]) => `<button class="chip ${moneyTab === k ? 'on' : ''}" onclick="moneyTab='${k}';render()">${n}</button>`).join('');
+
+  let body = '';
+  if (moneyTab === 'overview') {
+    const rows = tx.slice().sort((a, b) => b.day - a.day);
+    body = `<div class="grid" style="grid-template-columns:340px minmax(0,1fr);align-items:start" id="money-grid">
+      <form class="card col" onsubmit="addTx(event)">
+        <h3>New transaction</h3>
+        <div class="chips">
+          <label class="chip on"><input type="radio" name="type" value="outbound" checked hidden onchange="this.closest('.chips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.contains(this)))"><i class="fa-solid fa-arrow-down bad"></i>Expense</label>
+          <label class="chip"><input type="radio" name="type" value="inbound" hidden onchange="this.closest('.chips').querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.contains(this)))"><i class="fa-solid fa-arrow-up ok"></i>Income</label>
+        </div>
+        <div class="grid g2" style="gap:12px">
+          <label class="f">Amount (TND)<input class="in" name="amount" type="number" step="0.01" min="0.01" required></label>
+          <label class="f">Day<select class="in" name="day">${m.days.map((_, i) => `<option value="${i + 1}" ${i + 1 === DB.ui.day ? 'selected' : ''}>${label(i + 1)}</option>`).join('')}</select></label>
+        </div>
+        <label class="f">Category<select class="in" name="category">${cats.map(c => `<option>${esc(c)}</option>`).join('')}</select></label>
+        <label class="f">Description<input class="in" name="desc" required placeholder="e.g. Client payment"></label>
+        <button class="btn pri">Add</button>
+      </form>
+      <div class="card">
+        <h3>Ledger · ${monthName(DB.ui.month)}</h3>
+        <div class="list" style="margin-top:8px">${rows.length ? rows.map(t => `<div class="item">
+          <i class="fa-solid ${t.type === 'inbound' ? 'fa-arrow-up ok' : 'fa-arrow-down bad'}" style="width:16px;text-align:center"></i>
+          <div class="grow"><div>${esc(t.desc)}${t.link ? ' <i class="fa-solid fa-link faint sm" title="Logged automatically from a sale or deal"></i>' : ''}</div><div class="row sm mu" style="gap:10px"><span style="white-space:nowrap">${label(t.day)}</span><span class="row" style="gap:6px">${dot(t.category)}${esc(t.category)}</span></div></div>
+          <span style="font-weight:600" class="${t.type === 'inbound' ? 'ok' : ''}">${t.type === 'inbound' ? '+' : '−'}${tnd(t.amount)}</span>
+          <button class="btn ghost sm act" onclick="delTx(${t.day},'${t.id}')" aria-label="Delete transaction"><i class="fa-solid fa-trash"></i></button></div>`).join('') : empty('No transactions this month.')}</div>
+      </div></div>`;
+  } else if (moneyTab === 'budgets') {
+    body = `<form class="row" onsubmit="addCategory(event)" style="max-width:480px"><input class="in" name="c" placeholder="New category" required><button class="btn">Add category</button></form>
+    <div class="grid auto">${cats.map((c, i) => {
+      const alloc = m.budgets[c] || 0, spent = spentBy[c] || 0, avail = alloc + (inBy[c] || 0), left = avail - spent;
+      const color = left < 0 ? 'var(--bad)' : avail && left < avail * .2 ? 'var(--warn)' : 'var(--ok)';
+      return `<div class="card">
+        <div class="row between"><h3 style="font-size:14px;font-weight:600" class="row">${dot(c)}${esc(c)}</h3>
+          <div class="row" style="gap:2px"><button class="btn ghost sm" onclick="editBudget(${i})" aria-label="Edit budget"><i class="fa-solid fa-pen"></i></button>${c === 'Savings' ? '' : `<button class="btn ghost sm" onclick="delCategory(${i})" aria-label="Delete category"><i class="fa-solid fa-trash"></i></button>`}</div></div>
+        <div class="row between" style="margin:14px 0 10px;align-items:end"><div><div class="eyebrow">Left</div><div class="mid" style="color:${color}">${tnd(left, 0)}</div></div><div class="mu sm" style="text-align:right">Budget ${tnd(alloc, 0)}<br>Spent ${tnd(spent, 0)}</div></div>
+        ${bar(avail ? pct(spent, avail) : spent ? 100 : 0, color)}
+      </div>`;
+    }).join('')}</div>`;
+  } else {
+    body = `<div class="grid g3">
+      <div class="card span2"><h3>Net worth · ${monthName(DB.ui.month)}</h3><div class="chart" style="height:320px;margin-top:12px"><canvas id="nw-chart"></canvas></div></div>
+      <div class="card"><h3>Spending by category</h3><div class="chart" style="height:320px;margin-top:12px">${out ? '<canvas id="spend-chart"></canvas>' : empty('No spending yet.')}</div></div>
+    </div>`;
+    after.push(() => {
+      const upto = Math.max(elapsed(), 1);
+      mkChart('nw-chart', {
+        type: 'line',
+        data: { labels: m.days.slice(0, upto).map((_, i) => label(i + 1)), datasets: [{ data: m.days.slice(0, upto).map((_, i) => netWorth(DB.ui.month, i + 1)), borderColor: '#8b7bff', backgroundColor: glow('#8b7bff'), fill: true, tension: .3, pointRadius: 0, borderWidth: 2 }] },
+        options: { plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => tnd(c.parsed.y) } } }, scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } } } }
+      });
+      const keys = Object.keys(spentBy);
+      mkChart('spend-chart', {
+        type: 'doughnut',
+        data: { labels: keys, datasets: [{ data: keys.map(k => spentBy[k]), backgroundColor: keys.map(col), borderColor: '#121316', borderWidth: 2 }] },
+        options: { cutout: '72%', plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: c => ' ' + tnd(c.parsed) } } } }
+      });
+    });
+  }
+
+  return `
+  <div class="grid g4">
+    ${kpi('Net worth', tnd(netWorth(), 0), `Opening ${m.openingBalance != null ? tnd(m.openingBalance, 0) : 'carried over'} · <a href="#" style="color:var(--ac)" onclick="editOpening();return false">edit</a>`, '', 'fa-vault', '#7c83ff')}
+    ${kpi('Income this month', `<span class="ok">+${tnd(inbound, 0)}</span>`, '', '', 'fa-arrow-trend-up', '#10c98f')}
+    ${kpi('Spent this month', `−${tnd(out, 0)}`, '', '', 'fa-arrow-trend-down', '#f0509b')}
+    ${kpi('Runway', rw == null ? '∞' : `<span class="${rw < 30 ? 'bad' : ''}">${num(rw)} days</span>`, rw == null ? 'No spending yet' : `≈ ${(rw / 30).toFixed(1)} months`, '', 'fa-hourglass-half', '#f5a524')}
+  </div>
+  <div class="chips">${tabs}</div>
+  ${body}`;
+}
+function addTx(e) {
+  e.preventDefault();
+  const fd = Object.fromEntries(new FormData(e.target));
+  D(+fd.day).transactions.push({ id: uid(), type: fd.type, amount: parseFloat(fd.amount), category: fd.category, desc: fd.desc.trim() });
+  commit();
+}
+// Deleting an income entry that came from a sale or deal also deletes that sale or deal.
+function delTx(day, id) {
+  const link = D(day).transactions.find(t => t.id === id)?.link;
+  withUndo(link ? 'Income entry and its sale deleted' : 'Transaction deleted', () => {
+    D(day).transactions = D(day).transactions.filter(t => t.id !== id);
+    if (link) { M().sales = M().sales.filter(s => s.id !== link); M().deals = M().deals.filter(d => d.id !== link); }
+  });
+}
+function editOpening() {
+  askNumber('Opening balance', `Your net worth at the start of ${monthName(DB.ui.month)}. Leave as is to carry over from last month.`,
+    M().openingBalance ?? netWorth(DB.ui.month, 0), v => { if (!isNaN(v)) { M().openingBalance = v; commit(); } });
+}
+function editBudget(i) {
+  const c = S().capCategories[i];
+  askNumber(`Budget: ${c}`, `How much you plan to spend on ${c} in ${monthName(DB.ui.month)}.`, M().budgets[c] || 0, v => { if (!isNaN(v)) { M().budgets[c] = v; commit(); } });
+}
+function addCategory(e) {
+  e.preventDefault();
+  const c = new FormData(e.target).get('c').trim();
+  if (c && !S().capCategories.includes(c)) { S().capCategories.push(c); commit(); }
+}
+function delCategory(i) {
+  const c = S().capCategories[i];
+  withUndo(`${c} deleted, its transactions moved to Savings`, () => {
+    S().capCategories.splice(i, 1);
+    Object.values(DB.months).forEach(m => m.days.forEach(d => d.transactions.forEach(t => { if (t.category === c) t.category = 'Savings'; })));
+  });
+}
+
+/* ============ VIEW: ANALYSIS ============ */
+function vAnalysis(after) {
+  const m = M(), n = N(), upto = elapsed(), key = DB.ui.month, g = m.goals;
+  const ms = monthScore();
+  const rates = SIDS.map(s => ({ s, r: sectorRate(s) })).sort((a, b) => b.r - a.r);
+  let peak = null;
+  for (let i = 1; i <= upto; i++) { const s = dayScore(D(i)); if (s.total && (!peak || s.done / s.total >= peak.r)) peak = { day: i, r: s.done / s.total }; }
+  const xp = SIDS.reduce((a, s) => a + sectorXP(s), 0);
+
+  let insight = 'Not enough data yet. Check off a few days of habits to get a diagnosis.';
+  if (upto > 2) {
+    const best = rates[0], worst = rates[rates.length - 1];
+    insight = `Strongest sector: <b>${best.s}</b> at ${Math.round(best.r * 100)}%. Weakest: <b class="bad">${worst.s}</b> at ${Math.round(worst.r * 100)}%. Focus there first.`;
+    const dips = SIDS.map(s => ({ s, d: sectorRate(s, i => !isWeekend(key, i)) - sectorRate(s, i => isWeekend(key, i)) })).filter(x => x.d > .2);
+    if (dips.length) insight += `<br><br><span class="warn"><i class="fa-solid fa-triangle-exclamation"></i> Weekend drop:</span> ${dips.map(x => `${x.s} falls ${Math.round(x.d * 100)} pts on Sat/Sun`).join(', ')}.`;
+  }
+
+  // Habit × day matrix
+  matrixRows = [];
+  SIDS.forEach(sid => [...new Set(m.days.flatMap(d => d.habits[sid].map(h => h.text)))].forEach(text => matrixRows.push({ sid, text })));
+  const heat = m.days.map(d => { const s = dayScore(d); return s.total ? s.done / s.total : null; });
+  const heatCol = r => r == null ? 'transparent' : r < .3 ? 'var(--bad)' : r < .6 ? 'var(--warn)' : r < .85 ? 'var(--ac)' : 'var(--ok)';
+  const matrix = `<table><thead><tr><th></th>${m.days.map((_, i) => `<th onclick="DB.ui.day=${i + 1};go('habits')" title="${label(i + 1)}" ${i + 1 === DB.ui.day ? 'style="color:var(--tx)"' : ''}>${i + 1}</th>`).join('')}</tr></thead><tbody>
+    ${matrixRows.map((row, r) => `<tr><td class="h" onclick="editMatrixRow(${r})" title="${esc(row.text)}">${dot(row.sid)} ${esc(row.text)}</td>${m.days.map((d, i) => {
+      const h = d.habits[row.sid].find(x => x.text === row.text);
+      return `<td class="c"><div onclick="toggleCell(${r},${i + 1})" style="background:${h?.done ? col(row.sid) : h ? 'var(--s3)' : 'transparent'}"></div></td>`;
+    }).join('')}</tr>`).join('')}
+    <tr><td class="h" style="color:var(--tx)">Daily score</td>${heat.map((r, i) => `<td class="c"><div title="${label(i + 1)}: ${r == null ? '—' : Math.round(r * 100) + '%'}" style="height:6px;border-radius:99px;background:${heatCol(r)}"></div></td>`).join('')}</tr>
+  </tbody></table>`;
+
+  // Time allocation from timeline blocks
+  const time = {};
+  m.days.forEach(d => d.timeline.forEach(b => { let e = mins(b.end) - mins(b.start); if (e < 0) e += 1440; time[b.cat] = (time[b.cat] || 0) + e / 60; }));
+
+  // Pace vs. month progress
+  const ratio = upto / n, ng = ngRevenue(), expNG = g.ngTarget * ratio;
+  const sw = m.startWeight, cw = latestWeight(upto || 1), expW = sw ? sw - g.weightDrop * ratio : null;
+  const fc = forecast();
+  const studyDone = Math.round(Object.values(studyHours()).reduce((a, h) => a + h, 0)), studyGoal = g.math + g.physics + g.si, expStudy = studyGoal * ratio;
+  const pace = (title, sid, rows, ahead, p) => `<div class="card tint" style="--c:${col(sid)}"><h3>${badge(sid)}${title}</h3>
+    <div class="list sm" style="margin:12px 0">${rows.map(([k, v]) => `<div class="row between" style="padding:3px 0"><span class="mu">${k}</span><span>${v}</span></div>`).join('')}</div>
+    ${bar(p, ahead == null ? 'var(--fa)' : ahead ? 'var(--ok)' : 'var(--bad)')}
+    <div class="sm ${ahead == null ? 'faint' : ahead ? 'ok' : 'bad'}" style="margin-top:8px">${ahead == null ? 'Log data to see pace' : ahead ? 'Ahead of pace' : 'Behind pace'}</div></div>`;
+
+  after.push(() => {
+    const labels = m.days.slice(0, upto).map((_, i) => label(i + 1));
+    mkChart('line-chart', {
+      type: 'line',
+      data: { labels, datasets: SIDS.map(s => ({ label: s, data: m.days.slice(0, upto).map(d => { const h = d.habits[s]; return h.length ? pct(h.filter(x => x.done).length, h.length) : null; }), borderColor: col(s), backgroundColor: col(s), tension: .3, pointRadius: 0, borderWidth: 2 })) },
+      options: { interaction: { mode: 'index', intersect: false }, scales: { y: { min: 0, max: 100, ticks: { callback: v => v + '%' } }, x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } } }, plugins: { legend: { position: 'bottom' } } }
+    });
+    mkChart('radar-chart', {
+      type: 'radar',
+      data: { labels: SIDS, datasets: [{ data: SIDS.map(s => Math.round(sectorRate(s) * 100)), borderColor: '#a78bfa', backgroundColor: fade('#8b5cf6', .28), pointBackgroundColor: '#c4b5fd', borderWidth: 2 }] },
+      options: { plugins: { legend: { display: false } }, scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: 'rgba(255,255,255,.07)' }, angleLines: { color: 'rgba(255,255,255,.07)' }, pointLabels: { color: '#9b9fa8' } } } }
+    });
+    const tk = Object.keys(time);
+    mkChart('time-chart', {
+      type: 'doughnut',
+      data: { labels: tk, datasets: [{ data: tk.map(k => +time[k].toFixed(1)), backgroundColor: tk.map(col), borderColor: '#121316', borderWidth: 2 }] },
+      options: { cutout: '72%', plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: c => ` ${c.parsed}h` } } } }
+    });
+  });
+
+  return `
+  <div class="grid g4">
+    ${kpi('Month completion', pct(ms.done, ms.total) + '%', `${ms.done} of ${ms.total} done`, '', 'fa-calendar-check', '#7c83ff')}
+    ${kpi('Total XP', num(xp), `${upto} of ${n} days elapsed`, '', 'fa-star', '#f5a524')}
+    ${kpi('Strongest sector', rates[0].s, `${Math.round(rates[0].r * 100)}% done`, '', 'fa-trophy', col(rates[0].s))}
+    ${kpi('Best day', peak ? label(peak.day) : '—', peak ? `${Math.round(peak.r * 100)}% done` : '', '', 'fa-fire', '#ff8a3d')}
+  </div>
+  <div class="card"><h3><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--ac)"></i>Diagnosis</h3><p class="mu" style="margin-top:10px;max-width:900px">${insight}</p></div>
+  <div class="grid g3">
+    <div class="card span2"><h3>Completion by sector</h3><div class="chart" style="margin-top:12px">${upto ? '<canvas id="line-chart"></canvas>' : empty('This month has not started yet.')}</div></div>
+    <div class="card"><h3>Sector balance</h3><div class="chart" style="margin-top:12px"><canvas id="radar-chart"></canvas></div></div>
+  </div>
+  <div class="card"><div class="row between"><h3>Habit grid</h3><span class="faint sm">Click a cell to toggle, a habit name to rename or delete it for the whole month.</span></div><div class="mx" style="margin-top:12px">${matrix}</div></div>
+  <div class="grid g4">
+    <div class="card"><h3>Time allocation</h3><div class="chart" style="height:240px;margin-top:12px">${Object.keys(time).length ? '<canvas id="time-chart"></canvas>' : empty('No timeline blocks yet.')}</div></div>
+    ${pace('NextGlow', 'Business', [['Expected by now', tnd(expNG, 0)], ['Actual', tnd(ng, 0)], ['Forecast month end', fc ? tnd(fc.ng, 0) : '—']], upto ? ng >= expNG : null, pct(ng, g.ngTarget))}
+    ${pace('Weight', 'Physical', [['Expected by now', expW ? expW.toFixed(1) + ' kg' : '—'], ['Latest', cw ? cw + ' kg' : '—'], ['Forecast month end', fc?.weight ? fc.weight.toFixed(1) + ' kg' : '—']], sw && cw ? cw <= expW : null, sw && cw ? pct(sw - cw, g.weightDrop) : 0)}
+    ${pace('Study hours', 'Studying', [['Expected by now', Math.round(expStudy) + 'h'], ['Logged', studyDone + 'h'], ['Forecast month end', fc ? Math.round(fc.study) + 'h' : '—']], upto ? studyDone >= expStudy : null, pct(studyDone, studyGoal))}
+  </div>
+  ${monthCompare()}`;
+}
+
+// Month vs month: newest first (max 6). Arrows compare each month with the one before it.
+function monthCompare() {
+  const keys = Object.keys(DB.months).sort().reverse().slice(0, 6);
+  if (keys.length < 2) return '';
+  const st = keys.map(monthStats), money = v => tnd(v, 0), hrs = v => Math.round(v) + 'h', pc = v => Math.round(v) + '%';
+  const rows = [
+    ['Completion', s => s.rate == null ? null : s.rate * 100, pc, 1],
+    ...SIDS.map(sid => [`${dot(sid)} ${sid}`, s => s.sec[sid] == null ? null : s.sec[sid] * 100, pc, 1]),
+    ['Study hours', s => s.study, hrs, 1],
+    ['NextGlow', s => s.ng, money, 1],
+    ['Product sales', s => s.products, money, 1],
+    ['Income', s => s.inc, money, 1],
+    ['Spent', s => s.out, money, -1],
+    ['Net worth', s => s.up ? s.nwNow : null, money, 1],
+    ['Weight change', s => s.w0 != null && s.w1 != null ? s.w1 - s.w0 : null, v => (v > 0 ? '+' : '') + v.toFixed(1) + ' kg', -1],
+    ['Time planned', s => s.planned, hrs, 1]
+  ];
+  const cell = (r, i) => {
+    const v = r[1](st[i]), prev = st[i + 1] && r[1](st[i + 1]);
+    if (v == null) return '<td class="faint">—</td>';
+    const better = prev == null || Math.abs(v - prev) < 1e-9 ? null : (v > prev) === (r[3] > 0);
+    return `<td>${r[2](v)}${better == null ? '' : ` <i class="fa-solid ${v > prev ? 'fa-arrow-up' : 'fa-arrow-down'} ${better ? 'ok' : 'bad'}" style="font-size:10px"></i>`}</td>`;
+  };
+  return `<div class="card">
+    <div class="row between wrapx"><h3>Month vs month</h3><span class="faint sm">Arrows compare with the month before. The current month counts days so far.</span></div>
+    <div style="overflow-x:auto;margin-top:12px"><table style="width:100%;border-collapse:collapse;font-size:13px;white-space:nowrap" class="cmp">
+      <thead><tr><th></th>${st.map(s => `<th>${dateOf(s.key, 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}${s.up < s.n ? ' <span class="faint" style="font-weight:400">(so far)</span>' : ''}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(r => `<tr><td class="mu">${r[0]}</td>${st.map((_, i) => cell(r, i)).join('')}</tr>`).join('')}</tbody>
+    </table></div></div>`;
+}
+function toggleCell(r, day) {
+  const { sid, text } = matrixRows[r], list = D(day).habits[sid], h = list.find(x => x.text === text);
+  if (h) h.done = !h.done; else list.push({ text, done: true });
+  commit();
+}
+function editMatrixRow(r) {
+  const { sid, text } = matrixRows[r];
+  openDlg(`<h3>Edit habit</h3><p class="mu sm">${sid} · applies to every day of ${monthName(DB.ui.month)}.</p>
+    <input class="in" name="t" required value="${esc(text)}">
+    ${dlgButtons('Rename', '<button class="btn ghost danger" value="delete" formnovalidate><i class="fa-solid fa-trash"></i> Delete</button>')}`,
+    (fd, action) => {
+      if (action === 'delete') return withUndo('Habit deleted from this month', () => M().days.forEach(d => d.habits[sid] = d.habits[sid].filter(h => h.text !== text)));
+      const t = fd.get('t').trim();
+      if (t && t !== text) { M().days.forEach(d => d.habits[sid].forEach(h => { if (h.text === text) h.text = t; })); commit(); }
+    });
+}
+
+/* ============ VIEW: WEEKLY REVIEW ============ */
+const isoDate = dt => `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}`;
+// The Monday–Sunday week containing the selected day; days may fall in a neighbouring month (d is null if that month doesn't exist).
+function weekDays(anchor = dateOf(DB.ui.month, DB.ui.day)) {
+  const mon = new Date(anchor); mon.setDate(anchor.getDate() - (anchor.getDay() + 6) % 7);
+  return Array.from({ length: 7 }, (_, i) => {
+    const dt = new Date(mon); dt.setDate(mon.getDate() + i);
+    const key = isoDate(dt).slice(0, 7);
+    return { dt, key, day: dt.getDate(), d: DB.months[key]?.days[dt.getDate() - 1] || null };
+  });
+}
+function shiftWeek(delta) {
+  const dt = dateOf(DB.ui.month, DB.ui.day); dt.setDate(dt.getDate() + delta * 7);
+  const key = isoDate(dt).slice(0, 7);
+  if (!DB.months[key]) return toast(key > today().key ? 'That week is in the future' : 'No data for that week');
+  DB.ui.month = key; DB.ui.day = dt.getDate(); commit();
+}
+function saveReview(field, val) { const wk = isoDate(weekDays()[0].dt); (DB.reviews ||= {})[wk] = { ...DB.reviews[wk], [field]: val }; save(); }
+
+function vReview() {
+  const days = weekDays(), wk = isoDate(days[0].dt), end = new Date(); end.setHours(23, 59, 59);
+  const past = days.filter(x => x.d && x.dt <= end);
+  const rev = DB.reviews?.[wk] || {};
+  const prevMon = new Date(days[0].dt); prevMon.setDate(prevMon.getDate() - 7);
+  const lastFocus = DB.reviews?.[isoDate(prevMon)]?.focus;
+  const todayIso = isoDate(new Date());
+
+  const rates = days.map(x => { if (!x.d || x.dt > end) return null; const s = dayScore(x.d); return s.total ? s.done / s.total : null; });
+  const valid = rates.map((r, i) => [r, i]).filter(x => x[0] != null);
+  const avg = valid.length ? valid.reduce((a, x) => a + x[0], 0) / valid.length : null;
+  const best = valid.reduce((a, x) => !a || x[0] > a[0] ? x : a, null), worst = valid.reduce((a, x) => !a || x[0] < a[0] ? x : a, null);
+  const secRates = SIDS.map(s => { let c = 0, t = 0; past.forEach(x => { const h = x.d.habits[s]; c += h.filter(y => y.done).length; t += h.length; }); return [s, t ? c / t : null]; });
+  const study = { math: 0, physics: 0, si: 0 };
+  past.forEach(x => { const h = dayStudy(x.d, isoDate(x.dt) === todayIso ? nowMins() : Infinity); for (const k in study) study[k] += h[k]; });
+  const studyTotal = Object.values(study).reduce((a, h) => a + h, 0);
+  let inc = 0, out = 0, planned = 0, skipped = 0, tDone = 0, tOpen = 0;
+  past.forEach(x => {
+    x.d.transactions.forEach(t => { if (t.type === 'inbound') inc += t.amount; else out += t.amount; });
+    x.d.timeline.forEach(b => { const [s, e] = blockSpan(b); planned += (e - s) / 60; if (b.skipped) skipped++; });
+  });
+  days.forEach(x => x.d?.tasks.forEach(t => t.done ? tDone++ : tOpen++));
+  const ws = past.map(x => x.d.weight).filter(Boolean), wDelta = ws.length > 1 ? ws.at(-1) - ws[0] : null;
+  const notes = past.flatMap(x => Object.entries(x.d.reviews || {}).filter(([, v]) => v?.trim()).map(([s, txt]) => ({ dt: x.dt, s, txt })));
+  const heat = r => r == null ? 'var(--s3)' : r < .3 ? 'var(--bad)' : r < .6 ? 'var(--warn)' : r < .85 ? 'var(--ac)' : 'var(--ok)';
+  const short = dt => dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const wday = i => days[i].dt.toLocaleDateString('en-US', { weekday: 'long' });
+
+  return `
+  <div class="row between wrapx">
+    <div class="mid">Week of ${short(days[0].dt)} – ${short(days[6].dt)}</div>
+    <div class="row"><button class="btn" onclick="shiftWeek(-1)"><i class="fa-solid fa-chevron-left"></i> Previous week</button><button class="btn" onclick="shiftWeek(1)">Next week <i class="fa-solid fa-chevron-right"></i></button></div>
+  </div>
+  ${lastFocus ? `<div class="card" style="border-color:color-mix(in srgb,var(--ac) 40%,var(--line))"><div class="eyebrow">Last week's focus: did you hold it?</div><p>${esc(lastFocus)}</p></div>` : ''}
+
+  <div class="grid g4">
+    ${kpi('Average completion', avg == null ? '—' : Math.round(avg * 100) + '%', `${valid.length} day${valid.length === 1 ? '' : 's'} counted`, '', 'fa-bullseye', '#7c83ff')}
+    ${kpi('Study (Timeline)', `${+studyTotal.toFixed(1)}h`, STUDY.map(([k, n]) => `${n.split(' ')[0]} ${+study[k].toFixed(1)}h`).join(' · '), '', 'fa-graduation-cap', col('Studying'))}
+    ${kpi('Money', `<span class="${inc - out >= 0 ? 'ok' : 'bad'}">${inc - out >= 0 ? '+' : '−'}${tnd(Math.abs(inc - out), 0)}</span>`, `+${tnd(inc, 0)} in · −${tnd(out, 0)} out`, '', 'fa-wallet', '#10c98f')}
+    ${kpi('Weight', wDelta == null ? (ws[0] ? ws[0] + ' kg' : '—') : `<span class="${wDelta <= 0 ? 'ok' : 'bad'}">${wDelta > 0 ? '+' : ''}${wDelta.toFixed(1)} kg</span>`, ws.length ? `${ws.length} weigh-in${ws.length > 1 ? 's' : ''}` : 'No weigh-ins', '', 'fa-weight-scale', col('Physical'))}
+  </div>
+
+  <div class="grid g3" style="align-items:start">
+    <div class="card span2">
+      <h3>Daily completion</h3>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;align-items:end;height:150px;margin-top:16px">
+        ${days.map((x, i) => `<div style="display:flex;flex-direction:column;justify-content:flex-end;height:100%;cursor:${x.d ? 'pointer' : 'default'}" ${x.d ? `onclick="DB.ui.month='${x.key}';DB.ui.day=${x.day};go('today')"` : ''} title="${short(x.dt)}">
+          <span class="sm" style="text-align:center;margin-bottom:4px">${rates[i] == null ? '' : Math.round(rates[i] * 100) + '%'}</span>
+          <div style="height:${rates[i] == null ? 4 : Math.max(4, Math.round(rates[i] * 120))}px;background:${heat(rates[i])};border-radius:6px 6px 3px 3px"></div></div>`).join('')}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:8px">${days.map(x => `<span class="faint sm" style="text-align:center">${x.dt.toLocaleDateString('en-US', { weekday: 'short' })}</span>`).join('')}</div>
+      ${best && valid.length > 1 ? `<p class="mu sm" style="margin-top:14px">Best day: <b style="color:var(--tx)">${wday(best[1])}</b> (${Math.round(best[0] * 100)}%). Weakest: <b style="color:var(--tx)">${wday(worst[1])}</b> (${Math.round(worst[0] * 100)}%).</p>` : ''}
+    </div>
+    <div class="card">
+      <h3>Sectors</h3>
+      <div class="col" style="margin-top:14px;gap:12px">${secRates.map(([s, r]) => `<div><div class="row between sm" style="margin-bottom:6px"><span class="row" style="gap:8px">${dot(s)}${s}</span><span class="mu">${r == null ? '—' : Math.round(r * 100) + '%'}</span></div>${bar(r == null ? 0 : r * 100, col(s))}</div>`).join('')}</div>
+      <div class="hr"></div>
+      <div class="list sm">
+        <div class="row between" style="padding:2px 0"><span class="mu">Tasks done</span><span>${tDone} done · ${tOpen} open</span></div>
+        <div class="row between" style="padding:2px 0"><span class="mu">Time planned</span><span>${Math.round(planned)}h${skipped ? ` · ${skipped} skipped` : ''}</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g2" style="align-items:start">
+    <div class="card col">
+      <h3>Your review</h3>
+      <label class="f">3 wins<textarea class="in" rows="3" placeholder="What went well this week?" onchange="saveReview('wins',this.value)">${esc(rev.wins || '')}</textarea></label>
+      <label class="f">3 fixes<textarea class="in" rows="3" placeholder="What will you change?" onchange="saveReview('fixes',this.value)">${esc(rev.fixes || '')}</textarea></label>
+      <label class="f">Focus for next week<input class="in" placeholder="One sentence. It will appear at the top of next week's review." value="${esc(rev.focus || '')}" onchange="saveReview('focus',this.value)"></label>
+    </div>
+    <div class="card">
+      <h3>Your notes this week</h3><p class="sub">From the daily reflections in Habits.</p>
+      <div class="list" style="max-height:340px;overflow:auto">${notes.length ? notes.map(x => `<div style="padding:8px 2px;border-bottom:1px solid var(--line)"><div class="row sm mu" style="gap:8px;margin-bottom:4px">${dot(x.s)}${x.s} · ${short(x.dt)}</div><div style="white-space:pre-wrap">${esc(x.txt)}</div></div>`).join('') : empty('No reflections written this week.')}</div>
+    </div>
+  </div>`;
+}
+
+/* ============ VIEW: SETTINGS ============ */
+function vSettings() {
+  const s = S(), g = M().goals;
+  const goalField = (k, name, step = 1) => `<label class="f">${name}<input class="in" type="number" step="${step}" min="0" name="${k}" value="${g[k]}"></label>`;
+  return `
+  <div class="card">
+    <h3>Goals · ${monthName(DB.ui.month)}</h3>
+    <p class="sub">Saved for this month and used as the default for new months.</p>
+    <form onsubmit="saveGoals(event)" class="col">
+      <div class="grid g4" style="gap:12px">
+        ${goalField('ngTarget', 'NextGlow target (TND)')}${goalField('ngAvgDeal', 'Avg deal (TND)')}${goalField('ngCloseRate', 'Lead close rate (%)')}${goalField('weightDrop', 'Weight to lose (kg)', .1)}
+        ${goalField('math', 'Math hours')}${goalField('physics', 'Physics hours')}${goalField('si', 'SI hours')}${goalField('proteinPerKg', 'Protein (g per kg)', .1)}
+      </div>
+      <label class="row sm mu" style="gap:8px"><input type="checkbox" class="chk" name="autoStudy" ${M().autoStudy ? 'checked' : ''}>Count study hours from finished Studying blocks in Timeline (this month)</label>
+      <div><button class="btn pri">Save goals</button></div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>1-year goals</h3>
+    <p class="sub">Shown on each sector's Habits page.</p>
+    <form onsubmit="saveGoals1y(event)" class="col">
+      <div class="grid g2" style="gap:12px">${SIDS.map(id => `<label class="f"><span class="row" style="gap:6px">${dot(id)}${id}</span><input class="in" name="${id}" value="${esc(s.goals1y[id])}"></label>`).join('')}</div>
+      <div><button class="btn pri">Save</button></div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Default habits</h3>
+    <p class="sub">One per line. New months start with these.</p>
+    <form onsubmit="saveHabits(event)" class="col">
+      <div class="grid g3" style="gap:12px">${SIDS.map(id => `<label class="f"><span class="row" style="gap:6px">${dot(id)}${id}</span><textarea class="in" name="${id}" rows="5">${esc(s.habits[id].join('\n'))}</textarea></label>`).join('')}</div>
+      <div class="row wrapx"><button class="btn pri" value="save">Save defaults</button><button class="btn" value="apply">Save and apply from ${label(DB.ui.day)} to month end</button></div>
+    </form>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>Products</h3>
+      <p class="sub">One per line: <code>Brand | Group | Name | Price</code>. Each brand gets its own card on Overview.</p>
+      <form onsubmit="saveList(event,'products')" class="col"><textarea class="in" name="v" rows="12">${esc(s.products.map(p => [p.brand, p.group, p.name, p.price].join(' | ')).join('\n'))}</textarea><div><button class="btn pri">Save</button></div></form>
+    </div>
+    <div class="card">
+      <h3>Stages</h3>
+      <p class="sub">One per line: <code>from-to | Title | Description</code> (days of the month).</p>
+      <form onsubmit="saveList(event,'stages')" class="col"><textarea class="in" name="v" rows="12">${esc(s.stages.map(x => `${x.from}-${x.to} | ${x.title} | ${x.desc}`).join('\n'))}</textarea><div><button class="btn pri">Save</button></div></form>
+    </div>
+    <div class="card">
+      <h3>Physique rules</h3>
+      <form onsubmit="saveList(event,'rules')" class="col" style="margin-top:12px"><textarea class="in" name="v" rows="5">${esc(s.rules.join('\n'))}</textarea><div><button class="btn pri">Save</button></div></form>
+    </div>
+    <div class="card">
+      <h3>Study resources</h3>
+      <form onsubmit="saveList(event,'resources')" class="col" style="margin-top:12px"><textarea class="in" name="v" rows="5">${esc(s.resources.join('\n'))}</textarea><div><button class="btn pri">Save</button></div></form>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3><span class="badge"><i class="fa-solid fa-cloud"></i></span>Sync between PC and phone</h3>
+    <p class="sub">Saves your data to a private GitHub Gist. Every device connected with the same token shows the same data. Changes upload 2 seconds after you make them and download when you open or return to the page.</p>
+    <p class="sm" id="sync-status" style="margin-bottom:14px">${syncLine()}</p>
+    ${sync.state === 'off'
+      ? `<form class="row wrapx" onsubmit="connectSync(event)"><input class="in grow" name="token" type="password" placeholder="GitHub token (ghp_…)" required autocomplete="off" style="min-width:220px"><button class="btn pri">Connect</button></form>
+        <p class="faint sm" style="margin-top:10px">Make the token at github.com → Settings → Developer settings → Personal access tokens → Tokens (classic), with only the <b>gist</b> box ticked. It is kept in this browser only.</p>`
+      : `<div class="row wrapx"><button class="btn" onclick="pullSync()"><i class="fa-solid fa-arrows-rotate"></i> Sync now</button><button class="btn ghost danger" onclick="disconnectSync()">Turn off on this device</button></div>`}
+  </div>
+
+  <div class="card">
+    <h3>Data and backup</h3>
+    <p class="sub">Everything is stored in this browser. Link a backup file so a copy is saved automatically after every change.</p>
+    <div class="row wrapx">
+      ${window.showSaveFilePicker ? `<button class="btn pri" onclick="linkBackup()"><i class="fa-solid fa-link"></i> ${bk.handle ? 'Change backup file' : 'Link backup file'}</button>` : '<span class="mu sm">Auto-backup needs Chrome or Edge. Use Export instead.</span>'}
+      <button class="btn" onclick="exportData()"><i class="fa-solid fa-download"></i> Export JSON</button>
+      <label class="btn"><i class="fa-solid fa-upload"></i> Import JSON<input type="file" accept=".json" hidden onchange="importFile(event)"></label>
+      <button class="btn" onclick="rescan()"><i class="fa-solid fa-clock-rotate-left"></i> Import old dashboards from this browser</button>
+    </div>
+    <p class="faint sm" style="margin-top:12px">Import accepts a backup from this dashboard (replaces everything, with undo) or an export from an old monthly file (imported as one month).</p>
+  </div>`;
+}
+function saveGoals(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  for (const [k, v] of fd) { const n = parseFloat(v); if (!isNaN(n)) M().goals[k] = n; }
+  S().goals = { ...M().goals };
+  M().autoStudy = fd.has('autoStudy');
+  commit(); toast('Goals saved');
+}
+function saveGoals1y(e) { e.preventDefault(); for (const [k, v] of new FormData(e.target)) S().goals1y[k] = v.trim(); commit(); toast('Saved'); }
+function saveHabits(e) {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  SIDS.forEach(id => S().habits[id] = lines(fd.get(id)));
+  if (e.submitter?.value === 'apply') {
+    for (let day = DB.ui.day; day <= N(); day++) SIDS.forEach(id => {
+      const old = D(day).habits[id];
+      D(day).habits[id] = S().habits[id].map(text => ({ text, done: !!old.find(h => h.text === text)?.done }));
+    });
+  }
+  commit(); toast(e.submitter?.value === 'apply' ? 'Habits saved and applied' : 'Default habits saved');
+}
+const PARSERS = {
+  products: l => { const [brand, group, name, price] = l.split('|').map(x => x.trim()); return brand && name && price ? { brand, group: group || 'Other', name, price: parseFloat(price) || 0 } : null; },
+  stages: l => { const [range, title, desc = ''] = l.split('|').map(x => x.trim()); const [from, to] = (range || '').split('-').map(Number); return from && to && title ? { from, to, title, desc } : null; },
+  rules: l => l, resources: l => l
+};
+function saveList(e, key) {
+  e.preventDefault();
+  const items = lines(new FormData(e.target).get('v')).map(PARSERS[key]);
+  const bad = items.indexOf(null);
+  if (bad > -1) return toast(`Line ${bad + 1} is not in the right format`);
+  if (!items.length && key === 'stages') return toast('Keep at least one stage');
+  S()[key] = items;
+  commit(); toast('Saved');
+}
+
+/* ============ IMPORT / EXPORT / BACKUP ============ */
+function exportData() {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(DB)], { type: 'application/json' }));
+  a.download = `hama-ops-${today().key}-${pad(today().day)}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+}
+function importFile(e) {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  f.text().then(txt => {
+    let o; try { o = JSON.parse(txt); } catch { return toast('That file is not valid JSON'); }
+    if (o.months && o.settings) return withUndo('Backup restored', () => { DB = o; ensureMonth(today().key); });
+    if (!o.days) return toast('Unrecognized file');
+    const names = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+    const mi = names.findIndex(x => String(o.month || '').toLowerCase().startsWith(x));
+    const guess = mi > -1 ? `${today().key.slice(0, 4)}-${pad(mi + 1)}` : today().key;
+    openDlg(`<h3>Import old month</h3><p class="mu sm">Which month is this file? Existing data for that month will be replaced (you can undo).</p>
+      <input class="in" type="month" name="m" required value="${guess}">${dlgButtons('Import')}`,
+      fd => {
+        const key = fd.get('m');
+        withUndo(`Imported ${monthName(key)}`, () => {
+          DB.months[key] = convertOld(o, key, Math.max(0, o.days.length - daysIn(key)));
+          mergeOldSettings(o);
+          DB.ui.month = key; DB.ui.day = Math.min(DB.ui.day, daysIn(key));
+        });
+      });
+  });
+}
+function rescan() { const n = migrateLegacy(); commit(); toast(n ? `Imported ${n} month${n > 1 ? 's' : ''}` : 'No new old-dashboard data found in this browser'); }
+
+// Auto-backup to a file the user picks once (File System Access API, Chrome/Edge).
+const bk = { handle: null, timer: null, state: 'off', last: null };
+function idb(mode, fn) {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('hama_ops', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('kv');
+    r.onerror = () => rej(r.error);
+    r.onsuccess = () => { const tx = r.result.transaction('kv', mode), q = fn(tx.objectStore('kv')); tx.oncomplete = () => res(q.result); tx.onerror = () => rej(tx.error); };
+  });
+}
+async function initBackup() {
+  if (!window.showSaveFilePicker) return;
+  try { bk.handle = await idb('readonly', s => s.get('backup')); } catch { }
+  if (bk.handle) bk.state = await bk.handle.queryPermission({ mode: 'readwrite' }) === 'granted' ? 'on' : 'paused';
+  renderBackupStatus();
+}
+async function linkBackup() {
+  try {
+    bk.handle = await showSaveFilePicker({ suggestedName: 'hama-ops-backup.json', types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }] });
+    await idb('readwrite', s => s.put(bk.handle, 'backup'));
+    bk.state = 'on'; await writeBackup(); render();
+  } catch (err) { if (err.name !== 'AbortError') toast('Could not link the backup file'); }
+}
+async function resumeBackup() {
+  if (bk.handle && await bk.handle.requestPermission({ mode: 'readwrite' }) === 'granted') { bk.state = 'on'; writeBackup(); }
+}
+async function writeBackup() {
+  if (bk.state !== 'on') return;
+  try {
+    const w = await bk.handle.createWritable();
+    await w.write(JSON.stringify(DB)); await w.close();
+    bk.last = new Date();
+  } catch { bk.state = 'paused'; }
+  renderBackupStatus();
+}
+function queueBackup() { clearTimeout(bk.timer); bk.timer = setTimeout(writeBackup, 1500); }
+function renderBackupStatus() {
+  const el = $('backup-status'); if (!el) return;
+  el.innerHTML = bk.state === 'on'
+    ? `<span><i class="fa-solid fa-circle-check ok"></i> Backup on${bk.last ? ' · ' + bk.last.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : ''}</span>`
+    : bk.state === 'paused'
+      ? `<span><i class="fa-solid fa-circle-pause warn"></i> Backup paused</span><button onclick="resumeBackup()">Resume backup</button>`
+      : `<span><i class="fa-solid fa-circle-exclamation faint"></i> No backup file</span><button onclick="go('settings')">Set up backup</button>`;
+  el.innerHTML += `<span>${syncLine()}</span>${sync.state === 'off' ? `<button onclick="go('settings');$('sync-status').scrollIntoView({block:'center'})">Sync with phone</button>` : ''}`;
+}
+
+/* ============ SYNC (GitHub Gist) ============ */
+// The whole DB (minus device-only ui state) lives in one secret Gist. The newest updatedAt wins.
+// shortcut: last-write-wins on the whole file, so edits made offline on both devices at once keep only the newer side; merge per day if that ever bites.
+const SYNC_KEY = 'hama_sync', GIST_FILE = 'hama-ops.json';
+const sync = { token: '', gist: '', state: 'off', last: null, timer: null, busy: false, msg: '' };
+try { Object.assign(sync, JSON.parse(localStorage.getItem(SYNC_KEY)) || {}); } catch { }
+if (sync.token && sync.gist) sync.state = 'on';
+const saveSyncCfg = () => localStorage.setItem(SYNC_KEY, JSON.stringify({ token: sync.token, gist: sync.gist }));
+async function gh(path, opts = {}) {
+  const r = await fetch('https://api.github.com' + path, { ...opts, cache: 'no-store', headers: { Authorization: `Bearer ${sync.token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' } });
+  // GitHub answers 404 (not 403) when the token lacks the gist permission.
+  if (!r.ok) throw new Error(r.status === 401 ? 'the GitHub token is wrong or expired'
+    : r.status === 404 ? 'this token has no Gist permission. Make a classic token (starts with ghp_) with the "gist" box ticked'
+    : `GitHub error ${r.status}`);
+  return r.json();
+}
+async function readGist(g) {
+  const f = g.files[GIST_FILE];
+  if (!f) return null;
+  return JSON.parse(f.truncated ? await (await fetch(f.raw_url, { cache: 'no-store' })).text() : f.content);
+}
+const forCloud = () => JSON.stringify({ ...DB, ui: undefined });
+function adopt(remote) {
+  DB = { ...remote, ui: DB.ui };
+  ensureMonth(today().key);
+  if (!DB.months[DB.ui.month]) { DB.ui.month = today().key; DB.ui.day = today().day; }
+  save(false); render();
+}
+async function pullSync(quiet) {
+  if (sync.state === 'off' || sync.busy) return;
+  sync.busy = true; setSync('syncing');
+  try {
+    const remote = await readGist(await gh('/gists/' + sync.gist));
+    if (remote?.months && (remote.updatedAt || 0) > (DB.updatedAt || 0)) { adopt(remote); if (!quiet) toast('Updated with changes from your other device'); }
+    else if ((DB.updatedAt || 0) > (remote?.updatedAt || 0)) await pushNow();
+    sync.last = new Date(); setSync('on');
+  } catch (err) { setSync('error', err.message); }
+  sync.busy = false;
+}
+async function pushNow() {
+  await gh('/gists/' + sync.gist, { method: 'PATCH', body: JSON.stringify({ files: { [GIST_FILE]: { content: forCloud() } } }) });
+  sync.last = new Date();
+}
+function queueSync() {
+  if (sync.state === 'off') return;
+  clearTimeout(sync.timer);
+  sync.timer = setTimeout(async () => {
+    if (sync.busy) return queueSync();
+    sync.busy = true; setSync('syncing');
+    try { await pushNow(); setSync('on'); } catch (err) { setSync('error', err.message); }
+    sync.busy = false;
+  }, 2000);
+}
+function setSync(state, msg) {
+  sync.state = state; sync.msg = msg || '';
+  renderBackupStatus();
+  const el = $('sync-status'); if (el) el.innerHTML = syncLine();
+}
+const syncLine = () => ({
+  on: `<i class="fa-solid fa-cloud ok"></i> Synced${sync.last ? ' · ' + sync.last.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : ''}`,
+  syncing: `<i class="fa-solid fa-arrows-rotate fa-spin" style="color:var(--ac)"></i> Syncing…`,
+  error: `<i class="fa-solid fa-cloud-bolt bad"></i> Sync failed: ${esc(sync.msg)}`,
+  off: `<i class="fa-solid fa-cloud faint"></i> Sync is off`
+})[sync.state];
+async function connectSync(e) {
+  e.preventDefault();
+  sync.token = new FormData(e.target).get('token').trim();
+  if (sync.token.startsWith('github_pat_')) { sync.token = ''; return toast('That is a fine-grained token, which cannot use Gists. Make a classic token (starts with ghp_) with the "gist" box ticked.'); }
+  setSync('syncing');
+  try {
+    // Find the Gist another device already made, or make it.
+    const found = (await gh('/gists?per_page=100')).find(g => g.files[GIST_FILE]);
+    if (!found) {
+      if (!DB.updatedAt) DB.updatedAt = Date.now();
+      sync.gist = (await gh('/gists', { method: 'POST', body: JSON.stringify({ description: 'HAMA.OPS dashboard data', public: false, files: { [GIST_FILE]: { content: forCloud() } } }) })).id;
+      saveSyncCfg(); sync.last = new Date(); setSync('on'); render();
+      return toast('Sync is on. Now connect your other device with the same token.');
+    }
+    sync.gist = found.id; saveSyncCfg();
+    const remote = await readGist(await gh('/gists/' + found.id));
+    sync.last = new Date(); setSync('on');
+    // A device that was never edited just takes the cloud copy.
+    if (!DB.updatedAt || !remote?.months) { if (remote?.months) adopt(remote); else await pushNow(); render(); return toast('Connected. Your data is synced.'); }
+    render();
+    openDlg(`<h3>Which data do you keep?</h3><p class="mu sm">This device and the cloud both have data. The one you don't pick is replaced (you can undo).</p>
+      <p class="sm">Cloud: last change ${new Date(remote.updatedAt || 0).toLocaleString('en-US')}<br>This device: last change ${new Date(DB.updatedAt).toLocaleString('en-US')}</p>
+      <div class="row" style="justify-content:flex-end"><button class="btn" value="local">Keep this device</button><button class="btn pri" value="cloud">Use the cloud</button></div>`,
+      (fd, v) => {
+        if (v === 'cloud') withUndo('Loaded data from the cloud', () => { DB = { ...remote, ui: DB.ui }; ensureMonth(today().key); });
+        else save();
+      });
+  } catch (err) { sync.token = ''; sync.gist = ''; setSync('off'); toast('Could not connect: ' + err.message); }
+}
+function disconnectSync() {
+  localStorage.removeItem(SYNC_KEY);
+  Object.assign(sync, { token: '', gist: '', state: 'off', last: null });
+  render(); toast('Sync is off on this device. Your data stays here and in the cloud.');
+}
+
+/* ============ BOOT ============ */
+const VIEW_FNS = { today: vToday, overview: vOverview, timeline: vTimeline, habits: vHabits, tasks: vTasks, money: vMoney, analysis: vAnalysis, review: vReview, settings: vSettings };
+
+// Run with ?test in the URL: checks the data conversions on a throwaway copy.
+function selfTest() {
+  const keep = DB;
+  DB = { settings: clone(DEFAULTS), months: {}, ui: { month: '2026-10', day: 5, view: 'overview', sector: 'Studying' } };
+  const old = { days: Array.from({ length: 38 }, (_, i) => ({ habits: { Physical: [{ text: 'x', done: i === 7 }] }, transactions: i === 8 ? [{ type: 'outbound', amount: 50 }] : [] })),
+    capital: { startBalance: 1000 }, progress: { yallabac: { vipMeet: 2 }, nextglow: { deals: [{ amount: 400, day: 10 }] } } };
+  DB.months['2026-08'] = convertOld(old, '2026-08', 7);
+  const aug = DB.months['2026-08'];
+  console.assert(aug.days.length === 31 && aug.days[0].habits.Physical[0].done, 'offset drops the first 7 days');
+  console.assert(aug.sales.length === 2 && aug.sales[0].price === 269, 'counters become dated sales');
+  console.assert(aug.deals[0].day === 3, 'deal day shifted by offset');
+  console.assert(netWorth('2026-08', 31) === 950, 'opening balance minus spend');
+  ensureMonth('2026-09');
+  DB.months['2026-09'].days[0].transactions.push({ type: 'inbound', amount: 100 });
+  console.assert(netWorth('2026-09', 1) === 1050, 'net worth carries into the next month');
+  console.assert(DB.months['2026-09'].autoStudy === true && !aug.autoStudy, 'auto study only on new months');
+  const sep = DB.months['2026-09'];
+  sep.days[2].timeline = [{ start: '22:00', end: '01:30', cat: 'Studying', desc: 'maths sup' }, { start: '08:00', end: '09:00', cat: 'Studying', subject: 'si', desc: '' },
+    { start: '10:00', end: '11:00', cat: 'Studying', subject: 'physics', skipped: true }, { start: '12:00', end: '13:00', cat: 'Studying', subject: 'other', desc: 'math' }];
+  const ts = timelineStudy('2026-09');
+  console.assert(ts.math === 3.5 && ts.si === 1 && ts.physics === 0, 'timeline study: overnight, explicit subject, skipped, other');
+  DB.ui.month = '2026-09';
+  linkIncome('s1', 99, 'x', 4);
+  console.assert(sep.days[3].transactions.some(t => t.link === 's1' && t.type === 'inbound'), 'sale creates linked income');
+  unlinkIncome('s1');
+  console.assert(!sep.days[3].transactions.some(t => t.link === 's1'), 'unlink removes it');
+  console.assert(Math.abs(trend([[1, 90], [3, 88], [5, 86]])(31) - 60) < 1e-9 && trend([[1, 90]]) === null, 'trend line');
+  const ms = monthStats('2026-08');
+  console.assert(ms.up === 31 && ms.ng === 400 && ms.products === 538 && ms.out === 50 && ms.w0 === null, 'month stats');
+  DB = keep;
+  console.log('selfTest done');
+}
+
+load();
+if (location.search.includes('test')) selfTest();
+render();
+initBackup();
+pullSync(true);
+// Pick up changes from the other device when you come back to this tab.
+document.addEventListener('visibilitychange', () => { if (!document.hidden) pullSync(); });
+// Refresh every minute; the Today page re-renders unless you're typing or a dialog is open.
+setInterval(() => {
+  updateCountdown();
+  if (DB.ui.view === 'today' && !$('dlg').open && !document.activeElement.closest('input,textarea,select')) render();
+}, 60000);
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey || e.target.closest?.('input,textarea,select,dialog')) return;
+  const k = e.key.toLowerCase();
+  if (k === 'arrowleft') shiftDay(-1);
+  else if (k === 'arrowright') shiftDay(1);
+  else if (k === 't') { goToday(); go('today'); }
+  else if (k === 'n') { e.preventDefault(); go('today'); $('quick-task').focus(); }
+  else if (VIEWS[k - 1]) go(VIEWS[k - 1][0]);
+});
+</script>
+</body>
+</html>
